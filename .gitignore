@@ -1,0 +1,9 @@
+# Cấu hình môi trường thật (có thể chứa MAIL_PASSWORD / DB_PASSWORD) - KHÔNG commit
+.env
+# Log và file tạm khi chạy
+storage/logs/*.log
+storage/imports/*
+!storage/imports/.gitkeep
+storage/exports/*
+!storage/exports/.gitkeep
+.DS_Store

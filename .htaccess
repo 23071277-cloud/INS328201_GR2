@@ -1,0 +1,16 @@
+# STEP 15 hardening: tắt liệt kê thư mục (vd /assets/). Cần AllowOverride Options/All (XAMPP mặc định All).
+Options -Indexes
+
+# Root .htaccess: cho phép truy cập http://localhost/energy-dss/ (không cần gõ /public)
+# Vẫn khuyến nghị cấu hình DocumentRoot/VirtualHost trỏ thẳng vào /public nếu có thể.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^$ public/ [L]
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule (.*) public/$1 [L]
+</IfModule>
+
+# Chặn truy cập trực tiếp các file nhạy cảm nếu DocumentRoot lỡ trỏ vào thư mục gốc
+<FilesMatch "\.(env|sql|log|md)$">
+    Require all denied
+</FilesMatch>
