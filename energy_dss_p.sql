@@ -1395,7 +1395,8 @@ ALTER TABLE `system_configs`
 
 --
 -- Constraints for table `zones`
---
+-
+  
 ALTER TABLE `zones`
   ADD CONSTRAINT `fk_zone_building` FOREIGN KEY (`building_id`) REFERENCES `buildings` (`id`);
 COMMIT;
