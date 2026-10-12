@@ -1,14 +1,18 @@
-# Energy & Utility DSS — Topic 09 (Nhóm 2)
+Energy & Utility DSS — Decision Support System for Apartment Building (Topic 09 - Nhóm 2)
+1. Giới thiệu
+Đây là hệ thống hỗ trợ ra quyết định giám sát năng lượng và tiện ích (Facility Energy & Utility Monitoring Decision Support System - DSS) dành cho ban quản lý tòa nhà chung cư, được xây dựng dưới dạng web application bằng PHP 8.2 thuần + MariaDB (XAMPP), tập trung vào việc số hóa và chuẩn hóa quy trình từ ghi chỉ số công tơ điện/nước, tính phí theo biểu giá bậc thang, so sánh mức tiêu thụ, đến phát hiện bất thường và hỗ trợ con người xử lý cảnh báo.
 
-Hệ thống hỗ trợ ra quyết định (Decision Support System) cho ban quản lý chung cư: ghi chỉ số điện / nước, tính phí theo biểu giá bậc thang, so sánh tiêu thụ, phát hiện bất thường và hỗ trợ con người xử lý cảnh báo.
-PHP 8.2 thuần + MariaDB, chạy trên XAMPP, **không cần Internet**.
+Hệ thống này mang mục tiêu chính là:
 
-| | |
-|---|---|
-| Phạm vi | Core **FN-01 → FN-09** (53 chức năng) + **FN-10.03** gửi phiếu thông báo phí qua email (Secondary) |
-| Trạng thái Core | 41 PASS / 11 PARTIAL / 1 BLOCKED / 0 MISSING (bảng độ phủ chi tiết: lưu trữ, mục 12) |
-| CSDL hiện hành | **`energy_dss_v2`** — schema **27 bảng** = 26 bảng 3NF + `payment_transactions` (Payment module; DB thật hiện 26 bảng, bảng thanh toán thêm khi migrate có duyệt). `energy_dss` (schema cũ 29 bảng) giữ nguyên để **rollback** |
-| Kiểm thử | `bash tests/run_all_tests.sh` — lần chạy gần nhất 04/10/2026 (mọi DB tạm dựng từ `database/energy_dss_v2.sql`): **2.171/2.171 kiểm tra PASS**, lint 294 file 0 lỗi, exit 0 |
+* kiểm soát và minh bạch chỉ số tiêu thụ điện/nước theo thời gian thực,
+
+* loại bỏ sai sót thủ công trong quy trình nhập/import chỉ số công tơ và tính phí tiện ích,
+
+* hỗ trợ kiểm tra, phát hiện và cảnh báo các trường hợp tiêu thụ bất thường (Anomaly Detection),
+
+* hỗ trợ Ban Quản lý phân loại ưu tiên, giao ca kiểm tra hiện trường (Re-inspection) và đưa ra các khuyến nghị tự động theo quy tắc (Rule-based Recommendations),
+
+* cung cấp báo cáo, dashboard tổng quan và lập phiếu thông báo phí cho cư dân.
 
 ---
 
