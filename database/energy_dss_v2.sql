@@ -429,7 +429,8 @@ CREATE TABLE consumption_targets (
   created_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uq_target_scope_period (scope_type, scope_id, utility_type, billing_period_id) COMMENT '[DX] BR-25 một mục tiêu / (phạm vi, tiện ích, kỳ)',
   CONSTRAINT fk_target_period FOREIGN KEY (billing_period_id) REFERENCES billing_periods(id) ON DELETE RESTRICT,
-  CONSTRAINT fk_target_creator FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE RESTRICT
+  CONSTRAINT fk_target_creator FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE RESTRICT,
+  CONSTRAINT chk_target_value_nonnegative CHECK (target_value >= 0)
 ) ENGINE=InnoDB;
 
 -- FN-07.01 | [TL] FR-08 (giá trị ngưỡng là ASSUMPTION trong chính tài liệu, J-32)
@@ -441,6 +442,7 @@ CREATE TABLE alert_rules (
   compare_base    ENUM('ky_truoc','baseline','gia_tri_tuyet_doi') NOT NULL,
   operator        ENUM('gt','gte') NOT NULL DEFAULT 'gt' COMMENT 'VD tăng > X% so baseline',
   threshold_value DECIMAL(12,4) NOT NULL COMMENT '[TL] FR-08 ASSUMPTION - giá trị cụ thể CHƯA ĐƯỢC ĐẶC TẢ, xem J-32',
+  min_absolute_diff DECIMAL(12,4) NULL DEFAULT NULL COMMENT 'FR-08: Ngưỡng hiệu số tuyệt đối tối thiểu. NULL giữ quy tắc một điều kiện; khi có giá trị, cả threshold_value và min_absolute_diff phải được vượt.',
   scope_type      ENUM('toan_toa','zone','usage_type') NOT NULL DEFAULT 'toan_toa',
   scope_value     VARCHAR(50) NULL,
   priority_level  ENUM('cao','trung_binh','thap') NOT NULL DEFAULT 'trung_binh' COMMENT '[DX] BR-43',
