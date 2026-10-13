@@ -328,10 +328,40 @@ CREATE TABLE meter_readings (
   CONSTRAINT fk_reading_enterer FOREIGN KEY (entered_by) REFERENCES users(id) ON DELETE RESTRICT,
   CONSTRAINT fk_reading_confirmer FOREIGN KEY (confirmed_by) REFERENCES users(id) ON DELETE SET NULL,
   CONSTRAINT fk_reading_import_batch FOREIGN KEY (import_batch_id) REFERENCES import_batches(id) ON DELETE RESTRICT,
+  CONSTRAINT chk_reading_order CHECK (current_reading >= previous_reading),
+  CONSTRAINT chk_reading_consumption CHECK (consumption = current_reading - previous_reading),
   INDEX idx_reading_period (billing_period_id),
   INDEX idx_reading_status (status),
   INDEX idx_reading_import_batch (import_batch_id)
 ) ENGINE=InnoDB;
+
+-- FR-04 / BR-06: Chỉ công tơ đang hoạt động mới được ghi chỉ số.
+-- Ràng buộc này kiểm tra dữ liệu ở bảng meters nên cần trigger thay vì CHECK.
+DELIMITER $$
+CREATE TRIGGER trg_meter_readings_active_meter_insert
+BEFORE INSERT ON meter_readings
+FOR EACH ROW
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM meters WHERE id = NEW.meter_id AND status = 'hoat_dong'
+  ) THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'FR-04: meter reading requires an active meter';
+  END IF;
+END$$
+
+CREATE TRIGGER trg_meter_readings_active_meter_update
+BEFORE UPDATE ON meter_readings
+FOR EACH ROW
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM meters WHERE id = NEW.meter_id AND status = 'hoat_dong'
+  ) THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'FR-04: meter reading requires an active meter';
+  END IF;
+END$$
+DELIMITER ;
 
 -- FN-05.01-05.06 | [TL] FR-05, NFR-04, BR-18, BR-20, BR-24
 -- old_debt_amount: [ASSUMPTION A-15 - K-12/J-09] nhập thủ công bởi Kế toán,
@@ -441,6 +471,7 @@ CREATE TABLE alert_rules (
   compare_base    ENUM('ky_truoc','baseline','gia_tri_tuyet_doi') NOT NULL,
   operator        ENUM('gt','gte') NOT NULL DEFAULT 'gt' COMMENT 'VD tăng > X% so baseline',
   threshold_value DECIMAL(12,4) NOT NULL COMMENT '[TL] FR-08 ASSUMPTION - giá trị cụ thể CHƯA ĐƯỢC ĐẶC TẢ, xem J-32',
+  min_absolute_diff DECIMAL(12,4) NULL DEFAULT NULL COMMENT 'FR-08: Ngưỡng hiệu số tuyệt đối tối thiểu. NULL giữ quy tắc một điều kiện; khi có giá trị, cả threshold_value và min_absolute_diff phải được vượt.',
   scope_type      ENUM('toan_toa','zone','usage_type') NOT NULL DEFAULT 'toan_toa',
   scope_value     VARCHAR(50) NULL,
   priority_level  ENUM('cao','trung_binh','thap') NOT NULL DEFAULT 'trung_binh' COMMENT '[DX] BR-43',
