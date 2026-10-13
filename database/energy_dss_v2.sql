@@ -367,6 +367,17 @@ CREATE TABLE apartment_charges (
   CONSTRAINT fk_charge_period FOREIGN KEY (billing_period_id) REFERENCES billing_periods(id) ON DELETE RESTRICT,
   CONSTRAINT fk_charge_confirmer FOREIGN KEY (confirmed_by) REFERENCES users(id) ON DELETE SET NULL,
   CONSTRAINT fk_charge_approver FOREIGN KEY (approved_by) REFERENCES users(id) ON DELETE SET NULL,
+  CONSTRAINT chk_charge_values_nonnegative CHECK (
+    electricity_consumption >= 0 AND electricity_amount >= 0 AND electricity_vat_amount >= 0
+    AND water_consumption >= 0 AND water_amount >= 0 AND service_fee_amount >= 0
+    AND fire_insurance_amount >= 0 AND parking_fee_amount >= 0 AND total_arising >= 0
+    AND old_debt_amount >= 0 AND total_due >= 0
+  ),
+  CONSTRAINT chk_charge_totals CHECK (
+    total_arising = electricity_amount + electricity_vat_amount + water_amount
+      + service_fee_amount + fire_insurance_amount + parking_fee_amount
+    AND total_due = total_arising + old_debt_amount
+  ),
   INDEX idx_charge_period (billing_period_id),
   INDEX idx_charge_status (status)
 ) ENGINE=InnoDB;
@@ -441,6 +452,7 @@ CREATE TABLE alert_rules (
   compare_base    ENUM('ky_truoc','baseline','gia_tri_tuyet_doi') NOT NULL,
   operator        ENUM('gt','gte') NOT NULL DEFAULT 'gt' COMMENT 'VD tăng > X% so baseline',
   threshold_value DECIMAL(12,4) NOT NULL COMMENT '[TL] FR-08 ASSUMPTION - giá trị cụ thể CHƯA ĐƯỢC ĐẶC TẢ, xem J-32',
+  min_absolute_diff DECIMAL(12,4) NULL DEFAULT NULL COMMENT 'FR-08: Ngưỡng hiệu số tuyệt đối tối thiểu. NULL giữ quy tắc một điều kiện; khi có giá trị, cả threshold_value và min_absolute_diff phải được vượt.',
   scope_type      ENUM('toan_toa','zone','usage_type') NOT NULL DEFAULT 'toan_toa',
   scope_value     VARCHAR(50) NULL,
   priority_level  ENUM('cao','trung_binh','thap') NOT NULL DEFAULT 'trung_binh' COMMENT '[DX] BR-43',
