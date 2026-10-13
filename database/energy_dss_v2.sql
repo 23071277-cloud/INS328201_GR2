@@ -335,6 +335,34 @@ CREATE TABLE meter_readings (
   INDEX idx_reading_import_batch (import_batch_id)
 ) ENGINE=InnoDB;
 
+-- FR-04 / BR-06: Chỉ công tơ đang hoạt động mới được ghi chỉ số.
+-- Ràng buộc này kiểm tra dữ liệu ở bảng meters nên cần trigger thay vì CHECK.
+DELIMITER $$
+CREATE TRIGGER trg_meter_readings_active_meter_insert
+BEFORE INSERT ON meter_readings
+FOR EACH ROW
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM meters WHERE id = NEW.meter_id AND status = 'hoat_dong'
+  ) THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'FR-04: meter reading requires an active meter';
+  END IF;
+END$$
+
+CREATE TRIGGER trg_meter_readings_active_meter_update
+BEFORE UPDATE ON meter_readings
+FOR EACH ROW
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM meters WHERE id = NEW.meter_id AND status = 'hoat_dong'
+  ) THEN
+    SIGNAL SQLSTATE '45000'
+      SET MESSAGE_TEXT = 'FR-04: meter reading requires an active meter';
+  END IF;
+END$$
+DELIMITER ;
+
 -- FN-05.01-05.06 | [TL] FR-05, NFR-04, BR-18, BR-20, BR-24
 -- old_debt_amount: [ASSUMPTION A-15 - K-12/J-09] nhập thủ công bởi Kế toán,
 --   KHÔNG có module công nợ/thanh toán đầy đủ (ngoài phạm vi theo 4.5).
