@@ -412,6 +412,15 @@ CREATE TABLE baselines (
   created_by      INT UNSIGNED NULL,
   created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_baseline_creator FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  CONSTRAINT chk_baseline_average_periods CHECK (
+    (method = 'trung_binh_n_ky' AND n_periods >= 3)
+    OR (method <> 'trung_binh_n_ky' AND n_periods IS NULL)
+  ),
+  CONSTRAINT chk_baseline_values CHECK (
+    (method <> 'nhap_tay' OR manual_value IS NOT NULL)
+    AND (manual_value IS NULL OR manual_value >= 0)
+    AND (computed_value IS NULL OR computed_value >= 0)
+  ),
   INDEX idx_baseline_scope (scope_type, scope_id, utility_type, status)
 ) ENGINE=InnoDB;
 
