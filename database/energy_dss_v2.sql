@@ -367,6 +367,17 @@ CREATE TABLE apartment_charges (
   CONSTRAINT fk_charge_period FOREIGN KEY (billing_period_id) REFERENCES billing_periods(id) ON DELETE RESTRICT,
   CONSTRAINT fk_charge_confirmer FOREIGN KEY (confirmed_by) REFERENCES users(id) ON DELETE SET NULL,
   CONSTRAINT fk_charge_approver FOREIGN KEY (approved_by) REFERENCES users(id) ON DELETE SET NULL,
+  CONSTRAINT chk_charge_values_nonnegative CHECK (
+    electricity_consumption >= 0 AND electricity_amount >= 0 AND electricity_vat_amount >= 0
+    AND water_consumption >= 0 AND water_amount >= 0 AND service_fee_amount >= 0
+    AND fire_insurance_amount >= 0 AND parking_fee_amount >= 0 AND total_arising >= 0
+    AND old_debt_amount >= 0 AND total_due >= 0
+  ),
+  CONSTRAINT chk_charge_totals CHECK (
+    total_arising = electricity_amount + electricity_vat_amount + water_amount
+      + service_fee_amount + fire_insurance_amount + parking_fee_amount
+    AND total_due = total_arising + old_debt_amount
+  ),
   INDEX idx_charge_period (billing_period_id),
   INDEX idx_charge_status (status)
 ) ENGINE=InnoDB;
