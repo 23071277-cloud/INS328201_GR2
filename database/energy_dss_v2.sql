@@ -441,6 +441,7 @@ CREATE TABLE alert_rules (
   compare_base    ENUM('ky_truoc','baseline','gia_tri_tuyet_doi') NOT NULL,
   operator        ENUM('gt','gte') NOT NULL DEFAULT 'gt' COMMENT 'VD tăng > X% so baseline',
   threshold_value DECIMAL(12,4) NOT NULL COMMENT '[TL] FR-08 ASSUMPTION - giá trị cụ thể CHƯA ĐƯỢC ĐẶC TẢ, xem J-32',
+  min_absolute_diff DECIMAL(12,4) NULL DEFAULT NULL COMMENT 'FR-08: Ngưỡng hiệu số tuyệt đối tối thiểu. NULL giữ quy tắc một điều kiện; khi có giá trị, cả threshold_value và min_absolute_diff phải được vượt.',
   scope_type      ENUM('toan_toa','zone','usage_type') NOT NULL DEFAULT 'toan_toa',
   scope_value     VARCHAR(50) NULL,
   priority_level  ENUM('cao','trung_binh','thap') NOT NULL DEFAULT 'trung_binh' COMMENT '[DX] BR-43',
@@ -566,6 +567,8 @@ CREATE TABLE inspection_cases (
   CONSTRAINT fk_case_alert FOREIGN KEY (alert_id) REFERENCES alerts(id) ON DELETE CASCADE,
   CONSTRAINT fk_case_assignee FOREIGN KEY (assigned_to) REFERENCES users(id) ON DELETE RESTRICT,
   CONSTRAINT fk_case_creator FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE RESTRICT,
+  CONSTRAINT chk_case_result_required CHECK (status = 'da_giao' OR result_conclusion IS NOT NULL),
+  CONSTRAINT chk_case_rechecked_value CHECK (rechecked_value IS NULL OR rechecked_value >= 0),
   INDEX idx_case_assignee (assigned_to),
   INDEX idx_case_status (status)
 ) ENGINE=InnoDB;
