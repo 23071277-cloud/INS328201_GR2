@@ -328,6 +328,8 @@ CREATE TABLE meter_readings (
   CONSTRAINT fk_reading_enterer FOREIGN KEY (entered_by) REFERENCES users(id) ON DELETE RESTRICT,
   CONSTRAINT fk_reading_confirmer FOREIGN KEY (confirmed_by) REFERENCES users(id) ON DELETE SET NULL,
   CONSTRAINT fk_reading_import_batch FOREIGN KEY (import_batch_id) REFERENCES import_batches(id) ON DELETE RESTRICT,
+  CONSTRAINT chk_reading_order CHECK (current_reading >= previous_reading),
+  CONSTRAINT chk_reading_consumption CHECK (consumption = current_reading - previous_reading),
   INDEX idx_reading_period (billing_period_id),
   INDEX idx_reading_status (status),
   INDEX idx_reading_import_batch (import_batch_id)
