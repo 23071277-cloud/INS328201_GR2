@@ -429,7 +429,8 @@ CREATE TABLE consumption_targets (
   created_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uq_target_scope_period (scope_type, scope_id, utility_type, billing_period_id) COMMENT '[DX] BR-25 một mục tiêu / (phạm vi, tiện ích, kỳ)',
   CONSTRAINT fk_target_period FOREIGN KEY (billing_period_id) REFERENCES billing_periods(id) ON DELETE RESTRICT,
-  CONSTRAINT fk_target_creator FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE RESTRICT
+  CONSTRAINT fk_target_creator FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE RESTRICT,
+  CONSTRAINT chk_target_value_nonnegative CHECK (target_value >= 0)
 ) ENGINE=InnoDB;
 
 -- FN-07.01 | [TL] FR-08 (giá trị ngưỡng là ASSUMPTION trong chính tài liệu, J-32)
