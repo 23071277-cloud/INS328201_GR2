@@ -567,6 +567,8 @@ CREATE TABLE inspection_cases (
   CONSTRAINT fk_case_alert FOREIGN KEY (alert_id) REFERENCES alerts(id) ON DELETE CASCADE,
   CONSTRAINT fk_case_assignee FOREIGN KEY (assigned_to) REFERENCES users(id) ON DELETE RESTRICT,
   CONSTRAINT fk_case_creator FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE RESTRICT,
+  CONSTRAINT chk_case_result_required CHECK (status = 'da_giao' OR result_conclusion IS NOT NULL),
+  CONSTRAINT chk_case_rechecked_value CHECK (rechecked_value IS NULL OR rechecked_value >= 0),
   INDEX idx_case_assignee (assigned_to),
   INDEX idx_case_status (status)
 ) ENGINE=InnoDB;
