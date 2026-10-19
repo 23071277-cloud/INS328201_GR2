@@ -7,3 +7,6 @@ storage/imports/*
 storage/exports/*
 !storage/exports/.gitkeep
 .DS_Store
+
+# Token Zalo tự làm mới (chứa refresh_token) - KHÔNG commit
+storage/zalo_token.json
