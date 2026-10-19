@@ -1,0 +1,15 @@
+# STEP 15 hardening: tắt liệt kê thư mục (vd /assets/). Cần AllowOverride Options/All (XAMPP mặc định All).
+Options -Indexes
+
+# Front Controller pattern: mọi request không khớp file/thư mục thật -> index.php
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
+<FilesMatch "\.(env|sql|log)$">
+    Require all denied
+</FilesMatch>

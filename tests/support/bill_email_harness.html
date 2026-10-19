@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="UTF-8"><title>bill email harness</title></head>
+<body>
+<!--
+  Test trình duyệt FN-10.03 "Gửi Gmail cho các hộ" (thao tác live, không tải lại trang).
+  Chỉ phục vụ bởi tests/support/review_router.php (php -S, DB tạm, mail "log"). Điều khiển app thật trong iframe CÙNG origin.
+  ?period=<id>
+-->
+<iframe id="app" style="width:1300px;height:900px;border:0"></iframe>
+<pre id="__result"></pre>
+<script>
+(function () {
+  var periodId = new URLSearchParams(location.search).get('period');
+  var frame = document.getElementById('app');
+  var R = {};
+  function win() { return frame.contentWindow; }
+  function doc() { return frame.contentDocument; }
+  function q(sel) { return doc().querySelector(sel); }
+  function waitFor(pred, ms) {
+    var start = Date.now();
+    return new Promise(function (resolve, reject) {
+      (function tick() {
+        var v = null;
+        try { v = pred(); } catch (e) { v = null; }
+        if (v) { resolve(v); return; }
+        if (Date.now() - start > (ms || 15000)) { reject(new Error('timeout')); return; }
+        setTimeout(tick, 50);
+      })();
+    });
+  }
+  function navigate(url) {
+    return new Promise(function (resolve) {
+      frame.onload = function () { frame.onload = null; resolve(); };
+      frame.src = url;
+    });
+  }
+  function toasts() { return Array.prototype.map.call(doc().querySelectorAll('#toastStack .toast'), function (t) { return t.className.replace('toast ', '') + ':' + t.textContent; }); }
+  function count(key) { var el = q('[data-bill-email-status] [data-count="' + key + '"]'); return el ? parseInt(el.textContent, 10) : null; }
+
+  navigate('/login')
+    .then(function () {
+      q('#username').value = 'ketoan01';
+      q('#password').value = 'Password@123';
+      return new Promise(function (resolve) {
+        frame.onload = function () { frame.onload = null; resolve(); };
+        q('form').submit();
+      });
+    })
+    .then(function () { return navigate('/periods/' + periodId); })
+    .then(function () {
+      win().__liveMarker = 1;
+      R.before = { button: !!q('form[data-bill-email-send]'), done: !!q('[data-bill-email-done]'), pending: count('pending') };
+      q('form[data-bill-email-send]').requestSubmit();
+      return waitFor(function () { return !q('#confirmModal').hidden; });
+    })
+    .then(function () {
+      q('#confirmModalOk').click();
+      return waitFor(function () { return toasts().some(function (t) { return t.indexOf('Gửi Gmail cho các hộ') !== -1; }); });
+    })
+    .then(function () {
+      R.after = { noReload: win().__liveMarker === 1, toasts: toasts(), url: win().location.pathname, button: !!q('form[data-bill-email-send]'),
+        done: !!q('[data-bill-email-done]'), mailbox: !!q('a[href$="/periods/' + periodId + '/bill-emails"]'),
+        sent: count('sent'), pending: count('pending'), missing: count('missing'), failed: count('failed') };
+    })
+    .catch(function (e) { R.error = String(e && e.message || e); })
+    .then(function () { document.getElementById('__result').textContent = JSON.stringify(R); });
+})();
+</script>
+</body>
+</html>

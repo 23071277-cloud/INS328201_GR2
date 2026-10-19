@@ -1,0 +1,130 @@
+{
+    "alert_events": {
+        "rows": 5,
+        "sha256": "607e4b1f6f9fb1c86d6314f0a04122a87080260f0d8e9e268eb92f86a113bcef"
+    },
+    "alert_rules": {
+        "rows": 2,
+        "sha256": "11961f20397aa45d1865397765bbc94e52259bf0236cfe4b2bd519c2f452f240"
+    },
+    "alerts": {
+        "rows": 1,
+        "sha256": "c6136e7c0c941e40e50f25edf814995aba2588805f084ea10aa3bcca6c3bb531"
+    },
+    "apartment_charges": {
+        "rows": 50,
+        "sha256": "18ab6494404f3ee468d1f670b50f2630b56b931bcb625d3d670ec3cbe9b5f8cb"
+    },
+    "apartments": {
+        "rows": 10,
+        "sha256": "24c3e051542da2290cb4bec37b658891b326bc8f77dfe6b72f4593a44dcbe8bb"
+    },
+    "audit_logs": {
+        "rows": 596,
+        "sha256": "5f8e9c970366d4f41f89a6f9599db6fc90dbb2ac6a8152103e822fde2ef6a586"
+    },
+    "baselines": {
+        "rows": 4,
+        "sha256": "7d9c9f71beab907d16cd429e3537318ad8d81531598359b732293fa77edbffb0"
+    },
+    "billing_adjustment_requests": {
+        "rows": 1,
+        "sha256": "490631401f7cccc878b00bdc5b9033aebe5714ff342ed893e1948a75f94d2c25"
+    },
+    "billing_periods": {
+        "rows": 6,
+        "sha256": "c43ecd8dfcacaf6016a403ec767d18ae9ba3806b243d728d44e8f2b712069273"
+    },
+    "billing_reconciliations": {
+        "rows": 1,
+        "sha256": "327747a314452da83c60574df8dd656dcb0af5f166837087e55875a503f925dd"
+    },
+    "buildings": {
+        "rows": 1,
+        "sha256": "420af684bef52cf43a72b526f5f952f1efdf427614ef71cabcf7bec174b96dd9"
+    },
+    "charge_tier_details": {
+        "rows": 238,
+        "sha256": "a4a51481ec730211e0013a761d9c980e509165e7da7cde215e633dcef887d273"
+    },
+    "consumption_forecasts": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "consumption_targets": {
+        "rows": 2,
+        "sha256": "031f105431e94cb02f04045857224e4bd6768fa7cb8e32d5e383546dee732f5f"
+    },
+    "email_notifications": {
+        "rows": 7,
+        "sha256": "2a6913c27e9c08f50f925307b893422de91b70309c67a73fa11acb713ecfd580"
+    },
+    "figma_backup_meter_readings": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "import_batches": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "import_errors": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inspection_cases": {
+        "rows": 1,
+        "sha256": "646c0fbe1a32d842c09d9a9c43a809c76c851a278cf9dd9c20cbbdd22fd0a2af"
+    },
+    "meter_readings": {
+        "rows": 120,
+        "sha256": "88c90a14a89437d47bbf015ba91247d65bd3a049b93d4e1320f866b7a0a5e055"
+    },
+    "meters": {
+        "rows": 20,
+        "sha256": "28c0c368b39211aab8a6519f7b18cfe90353a5b651fe2b81abb611cd79f9aec9"
+    },
+    "parking_vehicles": {
+        "rows": 2,
+        "sha256": "6233bc07e4fe7ad5e3e50ace1ce00ddcb3874cb4beec4ce8bb5a2fb4f0e59867"
+    },
+    "payment_transactions": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "pricing_plans": {
+        "rows": 15,
+        "sha256": "9f66222c9dee4b80294119c7366bcb71d95e49c4d7c5c433004c226e98b3e2f1"
+    },
+    "pricing_tiers": {
+        "rows": 10,
+        "sha256": "80224d555bb5a8d34beaf4ae03962b3c576a77d6bba214f85f6a39da8d5fa9ee"
+    },
+    "recommendation_rules": {
+        "rows": 2,
+        "sha256": "504fcbd09b50bf0292a4e732d2d459fa277f2445f9cc37579c79dd6668037852"
+    },
+    "recommendations": {
+        "rows": 1,
+        "sha256": "1b2ec8de437d109f08b859d62b976e39a13ee96b7b78d7351a788e9696e9d218"
+    },
+    "residents": {
+        "rows": 3,
+        "sha256": "74f81c93a9e3696a70d9d5a148964837d52806d4f354fbb8d72cd8b0a6a214d5"
+    },
+    "supplementary_debits": {
+        "rows": 1,
+        "sha256": "f210403166075bfca7228c8fe747cd5a01ccc5ab725680fa49dc343aa709c66d"
+    },
+    "system_configs": {
+        "rows": 9,
+        "sha256": "0887268f7e4ac77f8ec03ce958a441453a37b920c9ca07254eb2152e0d68bd0e"
+    },
+    "users": {
+        "rows": 3,
+        "sha256": "d3985e3a60a74c9f179f9a391c4ef0229fe51e4af436edd77a4d6b16c5cb60d0"
+    },
+    "zones": {
+        "rows": 1,
+        "sha256": "d908ebb9c1428c1f1da0115b1a44550b7ca0040fdee904320fba1ea150f4389e"
+    }
+}

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="UTF-8"><title>live harness</title></head>
+<body>
+<!--
+  Test trình duyệt cho thao tác "live" (không tải lại trang) + badge sidebar + J-16 ngày theo dõi.
+  Chỉ phục vụ bởi tests/support/review_router.php (php -S, DB tạm). Điều khiển app thật trong iframe CÙNG origin:
+  đăng nhập, mở trang, bấm nút / gửi form như người dùng; đánh dấu window.__liveMarker để phát hiện tải lại trang.
+  ?role=bql&alert=<id>  |  ?role=kt
+-->
+<iframe id="app" style="width:1300px;height:900px;border:0"></iframe>
+<pre id="__result"></pre>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var role = params.get('role');
+  var alertId = params.get('alert');
+  var frame = document.getElementById('app');
+  var R = { steps: [] };
+  function win() { return frame.contentWindow; }
+  function doc() { return frame.contentDocument; }
+  function q(sel) { return doc().querySelector(sel); }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function waitFor(pred, ms) {
+    var start = Date.now();
+    return new Promise(function (resolve, reject) {
+      (function tick() {
+        var v = null;
+        try { v = pred(); } catch (e) { v = null; }
+        if (v) { resolve(v); return; }
+        if (Date.now() - start > (ms || 15000)) { reject(new Error('timeout')); return; }
+        setTimeout(tick, 50);
+      })();
+    });
+  }
+  function navigate(url) {
+    return new Promise(function (resolve) {
+      frame.onload = function () { frame.onload = null; resolve(); };
+      frame.src = url;
+    });
+  }
+  function badge(key) {
+    var b = q('[data-issue-count="' + key + '"]');
+    if (!b) { return null; }
+    return b.hidden ? 0 : parseInt(b.querySelector('[aria-hidden]').textContent, 10);
+  }
+  function mark() { win().__liveMarker = 1; }
+  function marked() { return win().__liveMarker === 1; }
+  function toasts() { return Array.prototype.map.call(doc().querySelectorAll('#toastStack .toast'), function (t) { return t.className.replace('toast ', '') + ':' + t.textContent; }); }
+  function clearToasts() { Array.prototype.forEach.call(doc().querySelectorAll('#toastStack .toast'), function (t) { t.remove(); }); }
+  function step(name, value) { R.steps.push(name); R[name] = value; }
+  function waitToast(text) { return waitFor(function () { return toasts().some(function (t) { return !text || t.indexOf(text) !== -1; }); }); }
+
+  function login(user) {
+    return navigate('/login').then(function () {
+      q('#username').value = user;
+      q('#password').value = 'Password@123';
+      return new Promise(function (resolve) {
+        frame.onload = function () { frame.onload = null; resolve(); };
+        q('form').submit(); // form đăng nhập ngoài vùng nội dung -> gửi bình thường
+      });
+    });
+  }
+
+  function bql() {
+    return login('bql01')
+      .then(function () { return navigate('/alerts/' + alertId); })
+      .then(function () {
+        mark();
+        step('badgeStart', { alerts: badge('alerts'), periods: badge('periods'), billing: badge('billing') });
+        // Review qua modal
+        q('[data-open-modal="reviewModal"]').click();
+        q('#reviewModal select[name="priority"]').value = 'cao';
+        q('#reviewModal form').requestSubmit();
+        return waitToast('Đã review');
+      })
+      .then(function () {
+        step('review', { noReload: marked(), toasts: toasts(), subtitle: q('.page-subtitle').textContent, timeline: q('main').textContent.indexOf('Mới → Đã review') !== -1,
+          reviewButtonGone: !q('[data-open-modal="reviewModal"]'), url: win().location.pathname, alertsBadge: badge('alerts') });
+        clearToasts();
+        // J-16 ngày theo dõi lại: D hiện + bắt buộc; C ẩn, không bắt buộc, xoá giá trị
+        var sel = q('[data-conclusion-select]');
+        var group = q('[data-followup-field]');
+        var date = group.querySelector('input[type="date"]');
+        var initial = { hidden: group.hidden, required: date.required };
+        sel.value = 'undetermined'; sel.dispatchEvent(new Event('change'));
+        var d = { hidden: group.hidden, required: date.required };
+        date.value = '2099-01-01';
+        sel.value = 'real_consumption_confirmed'; sel.dispatchEvent(new Event('change'));
+        var c = { hidden: group.hidden, required: date.required, value: date.value };
+        sel.value = 'apartment_status_incorrect'; sel.dispatchEvent(new Event('change'));
+        var a = { hidden: group.hidden, required: date.required };
+        step('followup', { initial: initial, d: d, c: c, a: a });
+        // Lỗi validate: thiếu căn cứ -> toast Thất bại, không tải lại
+        sel.value = 'real_consumption_confirmed'; sel.dispatchEvent(new Event('change'));
+        q('#j16_conclusion_note').value = '';
+        sel.form.requestSubmit();
+        return waitToast('Thất bại');
+      })
+      .then(function () {
+        step('invalid', { noReload: marked(), toasts: toasts(), fieldError: !!q('.has-error #j16_conclusion_note') });
+        clearToasts();
+        var sel = q('[data-conclusion-select]');
+        sel.value = 'real_consumption_confirmed'; sel.dispatchEvent(new Event('change'));
+        q('#j16_conclusion_note').value = 'Xác minh: có tiêu thụ thực';
+        sel.form.requestSubmit();
+        return waitToast('Đã lưu kết luận');
+      })
+      .then(function () {
+        step('conclude', { noReload: marked(), toasts: toasts(), conclusion: q('main').textContent.indexOf('C. Tiêu thụ thực tế được xác nhận') !== -1,
+          status: q('.page-subtitle').textContent, alertsBadge: badge('alerts'), gateNote: q('main').textContent.indexOf('Chặn xác nhận bản tính: đang áp dụng') === -1 });
+        clearToasts();
+        // Ghi nhận gọi điện (form không có modal)
+        var phone = q('form[action$="/j16/contact"] input[name="contact_type"][value="phone"]').form;
+        phone.querySelector('select[name="result"]').value = 'contacted';
+        phone.querySelector('textarea[name="contact_note"]').value = 'Gọi live';
+        phone.requestSubmit();
+        return waitToast('cuộc gọi');
+      })
+      .then(function () {
+        step('contact', { noReload: marked(), toasts: toasts(), logged: q('main').textContent.indexOf('Gọi live') !== -1 });
+        clearToasts();
+        // Duyệt chỉ số (form js-confirm -> modal xác nhận chung -> OK) ; badge "Kỳ ghi chỉ số" giảm
+        return navigate('/periods/2/approvals');
+      })
+      .then(function () {
+        mark();
+        var before = badge('periods');
+        q('[data-check-all]').click();
+        q('[data-check-all]').closest('form').requestSubmit();
+        return waitFor(function () { return !q('#confirmModal').hidden; }).then(function () {
+          q('#confirmModalOk').click();
+          return waitToast('Đã duyệt');
+        }).then(function () {
+          step('approve', { noReload: marked(), toasts: toasts(), periodsBefore: before, periodsAfter: badge('periods') });
+          clearToasts();
+          return navigate('/alerts?period_id=2');
+        });
+      })
+      .then(function () {
+        // Đánh giá ngưỡng: flash info -> toast Cảnh báo
+        mark();
+        q('form[action$="/alerts/evaluate"]').requestSubmit();
+        return waitFor(function () { return !q('#confirmModal').hidden; }).then(function () { q('#confirmModalOk').click(); return waitToast('J-16'); });
+      })
+      .then(function () {
+        step('evaluate', { noReload: marked(), toasts: toasts() });
+      });
+  }
+
+  function kt() {
+    return login('kythuat01')
+      .then(function () { return navigate('/periods/2/readings/create?meter_id=5'); })
+      .then(function () {
+        mark();
+        var before = badge('periods');
+        q('#current_reading').value = '600';
+        q('#current_reading').dispatchEvent(new Event('input', { bubbles: true }));
+        q('button[name="next"][value="1"]').click();
+        return waitToast('Đã lưu chỉ số Nháp').then(function () {
+          step('saveNext', { noReload: marked(), toasts: toasts(), periodsBefore: before, periodsAfter: badge('periods'), url: win().location.search,
+            row5: (q('[data-wl-row="5"]') || {}).getAttribute ? q('[data-wl-row="5"]').getAttribute('data-state') : null,
+            hasBilling: q('[data-issue-count="billing"]') !== null, hasEmails: q('[data-issue-count="emails"]') !== null });
+        });
+      });
+  }
+
+  (role === 'bql' ? bql() : kt())
+    .catch(function (e) { R.error = String(e && e.message || e) + ' @' + R.steps.join('>'); try { R.toastsAtError = toasts(); R.urlAtError = win().location.href; } catch (x) { /* */ } })
+    .then(function () { document.getElementById('__result').textContent = JSON.stringify(R); });
+})();
+</script>
+</body>
+</html>

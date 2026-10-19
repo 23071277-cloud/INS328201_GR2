@@ -481,7 +481,7 @@ App.register(function () {
     var badge = panel.querySelector('[data-wl-field="stateBadge"]');
     if (badge) { badge.className = 'badge ' + (badgeClass[it.state] || ''); badge.hidden = false; }
     setField('stateBadge', it.stateLabel);
-    setField('savedMsg', it.state === 'da_xac_nhan' ? App.tr('worklist.saved_approved', 'Chỉ số đã được BQL duyệt.') : App.tr('worklist.saved_draft', 'Công tơ này đã có chỉ số Nháp trong kỳ — đang chờ BQL duyệt (BR-08: mỗi công tơ một chỉ số / kỳ).'));
+    setField('savedMsg', it.state === 'da_xac_nhan' ? App.tr('worklist.saved_approved', 'Chỉ số đã được BQL duyệt.') : App.tr('worklist.saved_draft', 'Công tơ này đã có chỉ số Nháp trong kỳ — đang chờ BQL duyệt (mỗi công tơ chỉ có một chỉ số trong một kỳ).'));
     var detail = panel.querySelector('[data-wl-link="detail"]'), edit = panel.querySelector('[data-wl-link="edit"]');
     if (it.readingId) {
       if (detail) { detail.href = detail.href.replace(/\/readings\/\d+$/, '/readings/' + it.readingId); }
@@ -810,3 +810,26 @@ App.register(function () {
     });
   });
 });
+
+
+// Cỡ chữ A / A+ / A++ (lưu theo từng máy; html[data-text] do <head> áp dụng trước khi vẽ để không bị nhấp nháy).
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  function current() { var s = root.getAttribute('data-text'); return s === 'lg' || s === 'xl' ? s : 'sm'; }
+  function paint() {
+    var cur = current();
+    Array.prototype.forEach.call(document.querySelectorAll('.text-size button'), function (b) {
+      b.setAttribute('aria-pressed', b.getAttribute('data-size') === cur ? 'true' : 'false');
+    });
+  }
+  document.addEventListener('click', function (event) {
+    var btn = event.target.closest ? event.target.closest('.text-size button') : null;
+    if (!btn) { return; }
+    var size = btn.getAttribute('data-size');
+    if (size === 'sm') { root.removeAttribute('data-text'); } else { root.setAttribute('data-text', size); }
+    try { localStorage.setItem('dssTextSize', size); } catch (e) { /* trình duyệt chặn lưu: vẫn đổi được trong phiên */ }
+    paint();
+  });
+  paint();
+})();

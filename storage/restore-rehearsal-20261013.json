@@ -1,0 +1,626 @@
+{
+    "backup": {
+        "path": "C:\/EnergyDSS_Backups\/energy_dss_before_migration.sql",
+        "bytes": 614415,
+        "sha256": "0da414814aa0891d940ead27740e6566d28fb37506cfa385dd298596ba59bec7",
+        "completed_at": "2026-10-13 21:46:04"
+    },
+    "checks": {
+        "backup exists": "PASS",
+        "backup nonempty": "PASS",
+        "completion marker": "PASS",
+        "no switching or external execution": "PASS",
+        "no database DDL in dump": "PASS",
+        "no schema-qualified executable targets": "PASS",
+        "dump statement allowlist": "PASS",
+        "29 table definitions in backup": "PASS",
+        "routine definition present, no routine calls": "PASS",
+        "backup stable during inspection": "PASS",
+        "production source is read only": "PASS",
+        "verification database does not already exist": "PASS",
+        "restore connection targets isolated database": "PASS",
+        "restored exact inspected backup": "PASS",
+        "foreign key checks restored": "PASS",
+        "all 29 table names match": "PASS",
+        "all row counts match": "PASS",
+        "all table data fingerprints match": "PASS",
+        "all schema indexes and foreign keys match": "PASS",
+        "routine trigger event definitions match": "PASS",
+        "foreign key integrity": "PASS",
+        "charge21 remains 845399.60": "PASS",
+        "email1 unchanged and sent": "PASS",
+        "production unchanged": "PASS",
+        "cleanup routine never executed": "PASS",
+        "billing migration not applied": "PASS",
+        "restored routine matches exact backup definition": "PASS",
+        "backup unchanged": "PASS"
+    },
+    "isolated_database": "energy_dss_restore_verify_20261013",
+    "tables": {
+        "alerts": {
+            "original": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "ce1fc71e93730104a9bd533a5968002dc4acb91a36669b9cfa6a672d05f5f8dc"
+            },
+            "restored": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "ce1fc71e93730104a9bd533a5968002dc4acb91a36669b9cfa6a672d05f5f8dc"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "alert_events": {
+            "original": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "e76d58ff9507fc831e54502f87d2f16bcd0df24e27d502224fc0d9bc79cf911d"
+            },
+            "restored": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "e76d58ff9507fc831e54502f87d2f16bcd0df24e27d502224fc0d9bc79cf911d"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "alert_rules": {
+            "original": {
+                "rows": 2,
+                "data_sha256": "5d9a1fb37f8114a54414d21c2033f10601cd1e281be58211e783148c43de87e7",
+                "schema_sha256": "45b7f23ec38fc848ee7399582fa1802c7235f92cbcf995e41f8e83fd5d5bb3dc"
+            },
+            "restored": {
+                "rows": 2,
+                "data_sha256": "5d9a1fb37f8114a54414d21c2033f10601cd1e281be58211e783148c43de87e7",
+                "schema_sha256": "45b7f23ec38fc848ee7399582fa1802c7235f92cbcf995e41f8e83fd5d5bb3dc"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "apartments": {
+            "original": {
+                "rows": 10,
+                "data_sha256": "f8799f406c0e9ebc9d56bbade311814bfd709c38af5e15587b42822a02f4ae7a",
+                "schema_sha256": "af81087b05c9970b2240a3ad1d66de626fbc6e179627821858b64c7ec6527871"
+            },
+            "restored": {
+                "rows": 10,
+                "data_sha256": "f8799f406c0e9ebc9d56bbade311814bfd709c38af5e15587b42822a02f4ae7a",
+                "schema_sha256": "af81087b05c9970b2240a3ad1d66de626fbc6e179627821858b64c7ec6527871"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "apartment_charges": {
+            "original": {
+                "rows": 50,
+                "data_sha256": "facff1c23d52aa9fcd5ff98ea9733a8640009fae12f444f2c3f651aef2d41c1f",
+                "schema_sha256": "f1678881476d74f311818c5b877a6d2dc6a5994cf1f69a82f4ef11e9b13cafd5"
+            },
+            "restored": {
+                "rows": 50,
+                "data_sha256": "facff1c23d52aa9fcd5ff98ea9733a8640009fae12f444f2c3f651aef2d41c1f",
+                "schema_sha256": "f1678881476d74f311818c5b877a6d2dc6a5994cf1f69a82f4ef11e9b13cafd5"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "audit_logs": {
+            "original": {
+                "rows": 519,
+                "data_sha256": "99dd23556d0de9b711878f8a1b7fa8ec825eb9cbb3386e15e452ad5fbb12e609",
+                "schema_sha256": "4ebdbb3f1be62e4f239305fe2e6864229bf65edbabf37fb6e2462efb6dc0b54a"
+            },
+            "restored": {
+                "rows": 519,
+                "data_sha256": "99dd23556d0de9b711878f8a1b7fa8ec825eb9cbb3386e15e452ad5fbb12e609",
+                "schema_sha256": "4ebdbb3f1be62e4f239305fe2e6864229bf65edbabf37fb6e2462efb6dc0b54a"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "baselines": {
+            "original": {
+                "rows": 2,
+                "data_sha256": "c2ae6b5548193a94be9caf9f27f18d0d4ce5156c4e8d92335f478f9279c58d6b",
+                "schema_sha256": "11445d3fc41bb927e8ccf574598eefdcefda43db6ab91c48c2ff0ab029641672"
+            },
+            "restored": {
+                "rows": 2,
+                "data_sha256": "c2ae6b5548193a94be9caf9f27f18d0d4ce5156c4e8d92335f478f9279c58d6b",
+                "schema_sha256": "11445d3fc41bb927e8ccf574598eefdcefda43db6ab91c48c2ff0ab029641672"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "billing_periods": {
+            "original": {
+                "rows": 6,
+                "data_sha256": "c4edda0597bd660cf1e7b228e03453181c650a25fff4776302225161980ae2ef",
+                "schema_sha256": "885e9c81646399e921bf0520d405c555ccfe28967dfb152312c9a8913ff043f8"
+            },
+            "restored": {
+                "rows": 6,
+                "data_sha256": "c4edda0597bd660cf1e7b228e03453181c650a25fff4776302225161980ae2ef",
+                "schema_sha256": "885e9c81646399e921bf0520d405c555ccfe28967dfb152312c9a8913ff043f8"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "buildings": {
+            "original": {
+                "rows": 1,
+                "data_sha256": "a6cef410adb058888e30d5a100f2800d59c9e36a2ba64d4b143125c5a0adae72",
+                "schema_sha256": "461f9fc342dfeeb3ed09a24e0ecfa5b72393aea7c0e53e3b163f8a39ac8aefe1"
+            },
+            "restored": {
+                "rows": 1,
+                "data_sha256": "a6cef410adb058888e30d5a100f2800d59c9e36a2ba64d4b143125c5a0adae72",
+                "schema_sha256": "461f9fc342dfeeb3ed09a24e0ecfa5b72393aea7c0e53e3b163f8a39ac8aefe1"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "charge_tier_details": {
+            "original": {
+                "rows": 238,
+                "data_sha256": "5be52c0227e97fef00530e94615986a407611972f112630bda82e5e3d3981176",
+                "schema_sha256": "502ba7bbcff7bcbcc06c42b830abd00fe816307b8a5f92ccc6b105beefe749b3"
+            },
+            "restored": {
+                "rows": 238,
+                "data_sha256": "5be52c0227e97fef00530e94615986a407611972f112630bda82e5e3d3981176",
+                "schema_sha256": "502ba7bbcff7bcbcc06c42b830abd00fe816307b8a5f92ccc6b105beefe749b3"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "consumption_forecasts": {
+            "original": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "4eb58ef8cd2372233f2594ef12437e16bada513ddb29180e676aafb6c00e47e0"
+            },
+            "restored": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "4eb58ef8cd2372233f2594ef12437e16bada513ddb29180e676aafb6c00e47e0"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "consumption_targets": {
+            "original": {
+                "rows": 2,
+                "data_sha256": "46b9e7a22c328f484bafb86fce0b09709c477207f2968288657607a2661c3bd5",
+                "schema_sha256": "7128bf066d8962ed2dd326e841a36e4334fdf4fb3fcf0aebdee7d01ec722376d"
+            },
+            "restored": {
+                "rows": 2,
+                "data_sha256": "46b9e7a22c328f484bafb86fce0b09709c477207f2968288657607a2661c3bd5",
+                "schema_sha256": "7128bf066d8962ed2dd326e841a36e4334fdf4fb3fcf0aebdee7d01ec722376d"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "email_notifications": {
+            "original": {
+                "rows": 7,
+                "data_sha256": "c6f053dec98bb711afe0238d4a0045fbaf91436245d388db255719c5e42960fb",
+                "schema_sha256": "34c6cd1752fceb89894591283acf6fe5b7c0cad9c2e4ef8d9c37fba309ed1120"
+            },
+            "restored": {
+                "rows": 7,
+                "data_sha256": "c6f053dec98bb711afe0238d4a0045fbaf91436245d388db255719c5e42960fb",
+                "schema_sha256": "34c6cd1752fceb89894591283acf6fe5b7c0cad9c2e4ef8d9c37fba309ed1120"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "figma_backup_meter_readings": {
+            "original": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "5bf59d0567c1376334bfef8f994ae506fc570041269a0ff32c7e6db628b471d3"
+            },
+            "restored": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "5bf59d0567c1376334bfef8f994ae506fc570041269a0ff32c7e6db628b471d3"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "import_batches": {
+            "original": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "97b5fc3ac7f8ff2fbca0c26abac43cfc01b872b60b2a459c9ed4eeba8848d21b"
+            },
+            "restored": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "97b5fc3ac7f8ff2fbca0c26abac43cfc01b872b60b2a459c9ed4eeba8848d21b"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "import_errors": {
+            "original": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "444db8ad339b3e695375b41b5d1e1e739a8e63fe2e230a1074cec721cd4fb9d4"
+            },
+            "restored": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "444db8ad339b3e695375b41b5d1e1e739a8e63fe2e230a1074cec721cd4fb9d4"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "inspection_cases": {
+            "original": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "07d004c585031b56ad5c3506d0d44b577be09cf1998a9bbc1bc07661ca763364"
+            },
+            "restored": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "07d004c585031b56ad5c3506d0d44b577be09cf1998a9bbc1bc07661ca763364"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "meters": {
+            "original": {
+                "rows": 20,
+                "data_sha256": "feffe33390b1d150ba9ecce41e2893ec254d97baf9e08a685efa514a8b31fc4f",
+                "schema_sha256": "dd7a58021618312f16a81c8f24426a6944823b9f581898e4cae27de2ec8f96fd"
+            },
+            "restored": {
+                "rows": 20,
+                "data_sha256": "feffe33390b1d150ba9ecce41e2893ec254d97baf9e08a685efa514a8b31fc4f",
+                "schema_sha256": "dd7a58021618312f16a81c8f24426a6944823b9f581898e4cae27de2ec8f96fd"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "meter_readings": {
+            "original": {
+                "rows": 100,
+                "data_sha256": "6daf2edfd0b2548f8129b0e35074cef6f7a0b8f35b3817edc1b1fbd7ec83a1c2",
+                "schema_sha256": "3b047df38e1cb967d1b6f18d324f687d61b3e7134da7a87cd5dca053bc8717dd"
+            },
+            "restored": {
+                "rows": 100,
+                "data_sha256": "6daf2edfd0b2548f8129b0e35074cef6f7a0b8f35b3817edc1b1fbd7ec83a1c2",
+                "schema_sha256": "3b047df38e1cb967d1b6f18d324f687d61b3e7134da7a87cd5dca053bc8717dd"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "parking_vehicles": {
+            "original": {
+                "rows": 2,
+                "data_sha256": "7fe5a51fc0f4d690c8d861daa27ef24d63ff5872c3fdad1c03240ff30589cb5b",
+                "schema_sha256": "da9d73a668ce97f6cbf866d3e26253e6bb90d820b8c1c87bed8325869c6abf1f"
+            },
+            "restored": {
+                "rows": 2,
+                "data_sha256": "7fe5a51fc0f4d690c8d861daa27ef24d63ff5872c3fdad1c03240ff30589cb5b",
+                "schema_sha256": "da9d73a668ce97f6cbf866d3e26253e6bb90d820b8c1c87bed8325869c6abf1f"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "payment_transactions": {
+            "original": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "f54ea8a7a681f1ddcb13d06bba0e62dac1227a6e3638bc74736cb32b4931f1d1"
+            },
+            "restored": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "f54ea8a7a681f1ddcb13d06bba0e62dac1227a6e3638bc74736cb32b4931f1d1"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "pricing_plans": {
+            "original": {
+                "rows": 15,
+                "data_sha256": "db3b0f59d5171b1d677545208b35464acb2b3c8488a543ec9c1af9085ead6870",
+                "schema_sha256": "7f433c58a298cbd72b58de0b649706af8e997c84a198644d9744cd66d416f476"
+            },
+            "restored": {
+                "rows": 15,
+                "data_sha256": "db3b0f59d5171b1d677545208b35464acb2b3c8488a543ec9c1af9085ead6870",
+                "schema_sha256": "7f433c58a298cbd72b58de0b649706af8e997c84a198644d9744cd66d416f476"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "pricing_tiers": {
+            "original": {
+                "rows": 10,
+                "data_sha256": "7feb45c5deb4b476fbac9bb0c976f3d0431a319727c5339395d32632c7da4d3c",
+                "schema_sha256": "eab47f1cf4be0313e40c6863d7c5b553c278499446d1e8b76e45cace5de7cd45"
+            },
+            "restored": {
+                "rows": 10,
+                "data_sha256": "7feb45c5deb4b476fbac9bb0c976f3d0431a319727c5339395d32632c7da4d3c",
+                "schema_sha256": "eab47f1cf4be0313e40c6863d7c5b553c278499446d1e8b76e45cace5de7cd45"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "recommendations": {
+            "original": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "5fc649047263f27a9639535982c0515192bbf4741d33be5460cd6a6d9632a641"
+            },
+            "restored": {
+                "rows": 0,
+                "data_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "schema_sha256": "5fc649047263f27a9639535982c0515192bbf4741d33be5460cd6a6d9632a641"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "recommendation_rules": {
+            "original": {
+                "rows": 2,
+                "data_sha256": "ba6dc965711679f55f7eec4b365a9559e9a20c7e140a70a34aa834d61f6c75b3",
+                "schema_sha256": "d27c5435aa843bd56812b7e13b2f96a5c6fa8b265bc8e2d012901449b425b29d"
+            },
+            "restored": {
+                "rows": 2,
+                "data_sha256": "ba6dc965711679f55f7eec4b365a9559e9a20c7e140a70a34aa834d61f6c75b3",
+                "schema_sha256": "d27c5435aa843bd56812b7e13b2f96a5c6fa8b265bc8e2d012901449b425b29d"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "residents": {
+            "original": {
+                "rows": 3,
+                "data_sha256": "1596b5b0c52e432178de1c745430497d0a4756c11a72e5d6ea20858ed7cc1552",
+                "schema_sha256": "a60360823b85cb7ef4d8f15458cf972abd9b741345d9008e58ef2d3d54288ba8"
+            },
+            "restored": {
+                "rows": 3,
+                "data_sha256": "1596b5b0c52e432178de1c745430497d0a4756c11a72e5d6ea20858ed7cc1552",
+                "schema_sha256": "a60360823b85cb7ef4d8f15458cf972abd9b741345d9008e58ef2d3d54288ba8"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "system_configs": {
+            "original": {
+                "rows": 9,
+                "data_sha256": "a6d1efa4a4fd2a5892b0fc7f9c8faa0d365e652473c058915a2f4f97796bec55",
+                "schema_sha256": "3c8bf2e7439f3319bf19787d79264f6ac7f07964d6354f2f0b9233e48e11cff5"
+            },
+            "restored": {
+                "rows": 9,
+                "data_sha256": "a6d1efa4a4fd2a5892b0fc7f9c8faa0d365e652473c058915a2f4f97796bec55",
+                "schema_sha256": "3c8bf2e7439f3319bf19787d79264f6ac7f07964d6354f2f0b9233e48e11cff5"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "users": {
+            "original": {
+                "rows": 3,
+                "data_sha256": "03384442ffc925ed5223e34f82ae4cc8cd7c10452d23542f8c5c880b853e7691",
+                "schema_sha256": "5a3557b8cd0476c4677d224349b89e0a7b37674174c4c67d5a7059514134fdc1"
+            },
+            "restored": {
+                "rows": 3,
+                "data_sha256": "03384442ffc925ed5223e34f82ae4cc8cd7c10452d23542f8c5c880b853e7691",
+                "schema_sha256": "5a3557b8cd0476c4677d224349b89e0a7b37674174c4c67d5a7059514134fdc1"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        },
+        "zones": {
+            "original": {
+                "rows": 1,
+                "data_sha256": "23db9229c1bfe850df33b7b9a61fa8236e847bc50b57302834800f02521833c4",
+                "schema_sha256": "96f18df6a2606c394ca177d93d0185991f4b31727427dcdd40efbe74528be833"
+            },
+            "restored": {
+                "rows": 1,
+                "data_sha256": "23db9229c1bfe850df33b7b9a61fa8236e847bc50b57302834800f02521833c4",
+                "schema_sha256": "96f18df6a2606c394ca177d93d0185991f4b31727427dcdd40efbe74528be833"
+            },
+            "row_count_match": true,
+            "data_match": true,
+            "schema_match": true
+        }
+    },
+    "objects": {
+        "original": {
+            "routines": {
+                "cleanup_demo_keep_112026": "60665c957aaf2906f5b74d5198d3f5f54515a5f59e608afc44d89d82a239be49"
+            },
+            "triggers": [],
+            "events": []
+        },
+        "restored": {
+            "routines": {
+                "cleanup_demo_keep_112026": "60665c957aaf2906f5b74d5198d3f5f54515a5f59e608afc44d89d82a239be49"
+            },
+            "triggers": [],
+            "events": []
+        }
+    },
+    "foreign_key_orphans": {
+        "original": {
+            "alerts:fk_alert_apartment": 0,
+            "alerts:fk_alert_closer": 0,
+            "alerts:fk_alert_concluder": 0,
+            "alerts:fk_alert_creator": 0,
+            "alerts:fk_alert_meter": 0,
+            "alerts:fk_alert_period": 0,
+            "alerts:fk_alert_reviewer": 0,
+            "alerts:fk_alert_rule": 0,
+            "alert_events:fk_event_alert": 0,
+            "alert_events:fk_event_user": 0,
+            "alert_rules:fk_alertrule_creator": 0,
+            "apartments:fk_apartment_building": 0,
+            "apartments:fk_apartment_zone": 0,
+            "apartment_charges:fk_charge_apartment": 0,
+            "apartment_charges:fk_charge_approver": 0,
+            "apartment_charges:fk_charge_confirmer": 0,
+            "apartment_charges:fk_charge_period": 0,
+            "audit_logs:fk_audit_user": 0,
+            "baselines:fk_baseline_creator": 0,
+            "billing_periods:fk_period_creator": 0,
+            "billing_periods:fk_period_locker": 0,
+            "billing_periods:fk_period_reopener": 0,
+            "buildings:fk_building_creator": 0,
+            "charge_tier_details:fk_tierdetail_charge": 0,
+            "charge_tier_details:fk_tierdetail_reading": 0,
+            "consumption_forecasts:fk_forecast_creator": 0,
+            "consumption_forecasts:fk_forecast_period": 0,
+            "consumption_targets:fk_target_creator": 0,
+            "consumption_targets:fk_target_period": 0,
+            "email_notifications:fk_email_alert": 0,
+            "email_notifications:fk_email_apartment": 0,
+            "email_notifications:fk_email_charge": 0,
+            "email_notifications:fk_email_creator": 0,
+            "email_notifications:fk_email_period": 0,
+            "email_notifications:fk_email_resident": 0,
+            "import_batches:fk_import_period": 0,
+            "import_batches:fk_import_uploader": 0,
+            "import_errors:fk_importerr_batch": 0,
+            "inspection_cases:fk_case_alert": 0,
+            "inspection_cases:fk_case_assignee": 0,
+            "inspection_cases:fk_case_creator": 0,
+            "meters:fk_meter_apartment": 0,
+            "meter_readings:fk_mr_returned_by": 0,
+            "meter_readings:fk_reading_confirmer": 0,
+            "meter_readings:fk_reading_enterer": 0,
+            "meter_readings:fk_reading_import_batch": 0,
+            "meter_readings:fk_reading_meter": 0,
+            "meter_readings:fk_reading_old_meter": 0,
+            "meter_readings:fk_reading_period": 0,
+            "parking_vehicles:fk_vehicle_apartment": 0,
+            "payment_transactions:fk_payment_charge": 0,
+            "payment_transactions:fk_payment_reviewer": 0,
+            "pricing_plans:fk_pricing_base": 0,
+            "pricing_plans:fk_pricing_creator": 0,
+            "pricing_plans:fk_pricing_reviewer": 0,
+            "pricing_tiers:fk_tier_plan": 0,
+            "recommendations:fk_rec_alert": 0,
+            "recommendations:fk_rec_rule": 0,
+            "recommendation_rules:fk_recrule_creator": 0,
+            "residents:fk_resident_apartment": 0,
+            "system_configs:fk_sysconfig_user": 0,
+            "zones:fk_zone_building": 0
+        },
+        "restored": {
+            "alerts:fk_alert_apartment": 0,
+            "alerts:fk_alert_closer": 0,
+            "alerts:fk_alert_concluder": 0,
+            "alerts:fk_alert_creator": 0,
+            "alerts:fk_alert_meter": 0,
+            "alerts:fk_alert_period": 0,
+            "alerts:fk_alert_reviewer": 0,
+            "alerts:fk_alert_rule": 0,
+            "alert_events:fk_event_alert": 0,
+            "alert_events:fk_event_user": 0,
+            "alert_rules:fk_alertrule_creator": 0,
+            "apartments:fk_apartment_building": 0,
+            "apartments:fk_apartment_zone": 0,
+            "apartment_charges:fk_charge_apartment": 0,
+            "apartment_charges:fk_charge_approver": 0,
+            "apartment_charges:fk_charge_confirmer": 0,
+            "apartment_charges:fk_charge_period": 0,
+            "audit_logs:fk_audit_user": 0,
+            "baselines:fk_baseline_creator": 0,
+            "billing_periods:fk_period_creator": 0,
+            "billing_periods:fk_period_locker": 0,
+            "billing_periods:fk_period_reopener": 0,
+            "buildings:fk_building_creator": 0,
+            "charge_tier_details:fk_tierdetail_charge": 0,
+            "charge_tier_details:fk_tierdetail_reading": 0,
+            "consumption_forecasts:fk_forecast_creator": 0,
+            "consumption_forecasts:fk_forecast_period": 0,
+            "consumption_targets:fk_target_creator": 0,
+            "consumption_targets:fk_target_period": 0,
+            "email_notifications:fk_email_alert": 0,
+            "email_notifications:fk_email_apartment": 0,
+            "email_notifications:fk_email_charge": 0,
+            "email_notifications:fk_email_creator": 0,
+            "email_notifications:fk_email_period": 0,
+            "email_notifications:fk_email_resident": 0,
+            "import_batches:fk_import_period": 0,
+            "import_batches:fk_import_uploader": 0,
+            "import_errors:fk_importerr_batch": 0,
+            "inspection_cases:fk_case_alert": 0,
+            "inspection_cases:fk_case_assignee": 0,
+            "inspection_cases:fk_case_creator": 0,
+            "meters:fk_meter_apartment": 0,
+            "meter_readings:fk_mr_returned_by": 0,
+            "meter_readings:fk_reading_confirmer": 0,
+            "meter_readings:fk_reading_enterer": 0,
+            "meter_readings:fk_reading_import_batch": 0,
+            "meter_readings:fk_reading_meter": 0,
+            "meter_readings:fk_reading_old_meter": 0,
+            "meter_readings:fk_reading_period": 0,
+            "parking_vehicles:fk_vehicle_apartment": 0,
+            "payment_transactions:fk_payment_charge": 0,
+            "payment_transactions:fk_payment_reviewer": 0,
+            "pricing_plans:fk_pricing_base": 0,
+            "pricing_plans:fk_pricing_creator": 0,
+            "pricing_plans:fk_pricing_reviewer": 0,
+            "pricing_tiers:fk_tier_plan": 0,
+            "recommendations:fk_rec_alert": 0,
+            "recommendations:fk_rec_rule": 0,
+            "recommendation_rules:fk_recrule_creator": 0,
+            "residents:fk_resident_apartment": 0,
+            "system_configs:fk_sysconfig_user": 0,
+            "zones:fk_zone_building": 0
+        }
+    },
+    "restored_charge21_total": "845399.60",
+    "result": "PASS",
+    "routine_comment_correction": "Seven comment lines preserved from original dump; isolated routine definition only; routine never executed.",
+    "routine_definition_comparison": "Exact definition after CRLF\/LF normalization; creation timestamps excluded."
+}

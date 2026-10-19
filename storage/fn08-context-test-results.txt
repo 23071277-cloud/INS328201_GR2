@@ -1,0 +1,55 @@
+﻿PASS existing FN-07 threshold comparison still matches 70.64 percent
+PASS new alert: safe initial verification in Vietnamese
+PASS initial recommendation persisted through existing model
+PASS initial generation idempotent
+PASS reviewed alert without recheck still verifies
+PASS assigned recheck waits for evidence
+PASS without revision migration, changed state cannot overwrite old recommendation
+PASS legacy recommendation unchanged before migration
+PASS pending recheck creates appropriate revision
+PASS assigned recheck does not request repeated inspection
+PASS generation changes no readings/baselines/billing/payments/emails/locks
+PASS technician cannot generate recommendations
+PASS technician result does not finalize Management decision
+PASS Management-pending revision persisted
+PASS audited Management confirmation yields post-verification
+PASS confirmed anomaly recommends resident usage/saving/follow-up
+PASS post-verification revision generated
+PASS repeat confirmation advice is idempotent and side-effect free
+PASS all original recommendation snapshots intact
+PASS one current revision, prior context is historical
+PASS immutable guard installed: rec_revision_no_update
+PASS immutable guard installed: rec_revision_no_delete
+PASS closed alert has no new actionable recommendation
+PASS closed alert generation rejected
+PASS closed alert preserves all history
+PASS reopened alert does not inherit old confirmation
+PASS explicit reopening permits fresh verification revision
+PASS audited adjustment selects reevaluation
+PASS corrected-data advice preserves billing safeguards
+PASS adjustment advice does not automatically confirm/readjust/recalculate
+PASS Accounting cannot generate recommendations
+PASS confirmed status alone does not invent completed inspection
+PASS unrelated case decision cannot establish confirmation
+PASS FN-07 skips corrected draft reading
+PASS FN-07 dry run remains read only
+PASS FN-08 permission matrix unchanged
+PASS existing FN-08 placeholder rendering preserved
+PASS legacy recommendation history immutable throughout lifecycle
+PASS specific lifecycle policy takes precedence over generic threshold instruction
+PASS concurrent FN-08 generation succeeds: 
+PASS concurrent FN-08 generation succeeds: 
+PASS concurrent same-context generation posts one revision
+PASS preview/history are read only
+PASS disabled recommendation rule cannot produce actionable advice
+PASS disabled rule history remains but is not current
+PASS changed effective rule configuration may produce new revision
+PASS rule changes never overwrite historical revision evidence
+PASS missing technician findings produce safe unknown result
+PASS contradictory multiple-case history is not silently inferred
+PASS all new revisions leave original recommendations unchanged
+PASS existing zero-consumption condition preserved
+PASS existing missing-history behavior preserved
+PASS existing utility filter preserved
+PASS existing missed-target recommendation condition preserved
+54/54 PASS; isolated database retained: energy_dss_fn08_context_test_20261014_e

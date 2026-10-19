@@ -1,0 +1,20 @@
+﻿[
+    {
+        "ProcessId":  25380,
+        "ParentProcessId":  17000,
+        "ExecutablePath":  "c:\\xampp\\apache\\bin\\httpd.exe",
+        "CommandLine":  "c:\\xampp\\apache\\bin\\httpd.exe"
+    },
+    {
+        "ProcessId":  22580,
+        "ParentProcessId":  25380,
+        "ExecutablePath":  "C:\\xampp\\apache\\bin\\httpd.exe",
+        "CommandLine":  "C:\\xampp\\apache\\bin\\httpd.exe -d C:/xampp/apache"
+    },
+    {
+        "ProcessId":  5928,
+        "ParentProcessId":  16584,
+        "ExecutablePath":  "C:\\xampp\\php\\php.exe",
+        "CommandLine":  "\"C:\\xampp\\php\\php.exe\" -S 127.0.0.1:8099 -t public public/index.php"
+    }
+]

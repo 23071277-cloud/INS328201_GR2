@@ -1,0 +1,9 @@
+# Mock Bank demo qua Apache (htdocs/mock-bank -> tools/mock-bank): chỉ cho chính máy local.
+# config.local.php (chứa secret), script .sh, file ẩn... không truy cập được qua web.
+Options -Indexes
+DirectoryIndex index.php
+Require local
+
+<FilesMatch "^(config\.local\.php|.*\.(sh|log|md)|\..*)$">
+    Require all denied
+</FilesMatch>

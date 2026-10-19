@@ -41,4 +41,8 @@ App\Core\Env::load(BASE_PATH . '/.env');
 
 date_default_timezone_set((string) App\Core\Env::get('APP_TIMEZONE', 'Asia/Ho_Chi_Minh'));
 
+// Đảm bảo PHP xử lý chuỗi UTF-8 đúng (tránh lỗi dấu hỏi ??? khi mbstring dùng charset khác)
+mb_internal_encoding('UTF-8');
+mb_http_output('UTF-8');
+
 App\Core\ErrorHandler::register();

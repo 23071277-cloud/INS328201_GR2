@@ -1,0 +1,101 @@
+/* =====================================================================
+   Dễ dùng cho mọi người (kể cả người ít quen công nghệ)
+   - Chữ to và rõ hơn, nút/ô nhập đủ lớn để bấm bằng ngón tay
+   - Nút chỉnh cỡ chữ A− / A / A+ (lưu theo từng máy)
+   - Tương phản chữ phụ tốt hơn, viền focus rõ
+   Nạp SAU app.css nên chỉ cần ghi đè.
+   ===================================================================== */
+:root {
+  --z: 1;
+  --c-faint: #6f7d95;     /* chữ mờ / placeholder: đủ đọc */
+  --c-muted: #596579;
+}
+@supports (zoom: 1) {
+  html[data-text="lg"] { --z: 1.12; zoom: 1.12; }
+  html[data-text="xl"] { --z: 1.25; zoom: 1.25; }
+}
+/* zoom làm kích thước viewport "ảo" -> bù lại cho các khối cao bằng màn hình */
+.app-shell { min-height: calc(100vh / var(--z)); }
+.app-sidebar { height: calc(100vh / var(--z)); }
+
+body { font-size: 15px; line-height: 1.6; }
+.page-title { font-size: 24px; }
+.page-subtitle { font-size: 14.5px; color: var(--c-muted); }
+.section-title { font-size: 15px; }
+.panel__title { font-size: 16px; }
+.breadcrumb { font-size: 13.5px; }
+
+/* Nút & ô nhập: tối thiểu 44px để dễ chạm */
+.btn { min-height: 44px; padding: 9px 18px; font-size: 15px; }
+.btn--sm { min-height: 38px; padding: 6px 14px; font-size: 14px; }
+.form-group input:not([type]),
+.form-group input[type="text"], .form-group input[type="password"], .form-group input[type="number"],
+.form-group input[type="date"], .form-group input[type="email"], .form-group input[type="search"],
+.form-group select, .form-group textarea,
+.toolbar input:not([type]), .toolbar input[type="text"], .toolbar input[type="date"],
+.toolbar input[type="number"], .toolbar input[type="search"], .toolbar select {
+  min-height: 44px; font-size: 15px;
+}
+.form-group label { font-size: 14.5px; margin-bottom: 7px; }
+.toolbar label { font-size: 13.5px; }
+.form-hint { font-size: 13.5px; }
+.form-error { font-size: 14px; }
+.form-group input[type="checkbox"], .form-group input[type="radio"], .checkbox-line input { width: 20px; height: 20px; }
+.checkbox-line { font-size: 15px; }
+
+/* Bảng dễ đọc hơn */
+.data-table { font-size: 14.5px; }
+.data-table th { font-size: 12.5px; }
+.data-table th, .data-table td { padding-top: 12px; padding-bottom: 12px; }
+.badge { font-size: 12.5px; }
+
+/* Menu bên trái */
+.app-sidebar__link { font-size: 15px; padding: 10px 12px; }
+.app-sidebar__icon { font-size: 17px; width: 24px; }
+.nav-group__label { font-size: 12px; }
+.app-sidebar__brand { font-size: 16px; }
+
+/* Thanh trên cùng */
+.hdr-user__name { font-size: 14.5px; }
+.hdr-user__role { font-size: 12.5px; }
+.hdr-user__logout-btn { min-height: 40px; }
+
+/* Cỡ chữ + hướng dẫn trên thanh trên cùng */
+.hdr-tools { display: flex; align-items: center; gap: 8px; }
+.text-size { display: inline-flex; border: 1px solid var(--c-border-strong); border-radius: var(--radius); overflow: hidden; background: var(--c-surface); }
+.text-size button {
+  min-width: 40px; min-height: 40px; padding: 0 8px; border: 0; background: transparent; cursor: pointer;
+  font-family: inherit; font-weight: 700; color: var(--c-text-2);
+}
+.text-size button + button { border-left: 1px solid var(--c-border); }
+.text-size button:hover { background: var(--c-primary-soft); }
+.text-size button[aria-pressed="true"] { background: var(--c-primary); color: #fff; }
+.text-size button[data-size="sm"] { font-size: 13px; }
+.text-size button[data-size="lg"] { font-size: 16px; }
+.text-size button[data-size="xl"] { font-size: 19px; }
+.help-link {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px;
+  border: 1px solid var(--c-border-strong); border-radius: var(--radius); background: var(--c-surface);
+  color: var(--c-primary); font-weight: 600; font-size: 14.5px; text-decoration: none; white-space: nowrap;
+}
+.help-link:hover { background: var(--c-primary-soft); text-decoration: none; }
+
+/* Trang "Hướng dẫn sử dụng" */
+.help-steps { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); margin: 8px 0 24px; padding: 0; list-style: none; counter-reset: step; }
+.help-step {
+  position: relative; display: flex; flex-direction: column; gap: 10px; padding: 18px 18px 16px 18px;
+  background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-xs);
+}
+.help-step__no {
+  width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--c-primary); color: #fff; font-weight: 700; font-size: 16px;
+}
+.help-step__title { margin: 0; font-size: 17px; font-weight: 700; color: var(--c-text); }
+.help-step__desc { margin: 0; color: var(--c-text-2); font-size: 15px; flex: 1; }
+.help-note { padding: 14px 16px; border-radius: var(--radius); background: var(--c-info-bg); border: 1px solid var(--c-info-bd); color: var(--c-text-2); font-size: 14.5px; }
+
+@media (max-width: 860px) {
+  .hdr-tools .help-link span:last-child { display: none; }
+  .text-size button[data-size="sm"] { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }

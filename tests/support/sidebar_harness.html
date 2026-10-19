@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="UTF-8"><title>sidebar harness</title></head>
+<body>
+<!--
+  Test trình duyệt cho sidebar dạng nhóm thu gọn / mở rộng (mọi vai trò). Chỉ phục vụ bởi tests/support/review_router.php (php -S, DB tạm).
+  Điều khiển app thật trong iframe CÙNG origin: đăng nhập, bấm tiêu đề nhóm như người dùng, đo chiều cao panel / chevron / layout.
+  ?lang=en (tuỳ chọn: đổi ngôn ngữ bằng menu 🌐 trên topbar trước khi chạy)&user=bql01&a=<nhóm 1>&b=<nhóm 2>&pay=<nhóm có badge>&sub=<trang con>&subGroup=<nhóm cha>
+-->
+<iframe id="app" style="width:1300px;height:900px;border:0"></iframe>
+<pre id="__result"></pre>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var P = { user: params.get('user'), a: params.get('a'), b: params.get('b'), pay: params.get('pay'), sub: params.get('sub'), subGroup: params.get('subGroup'), lang: params.get('lang') };
+  var frame = document.getElementById('app');
+  var R = { steps: [] };
+  function win() { return frame.contentWindow; }
+  function doc() { return frame.contentDocument; }
+  function q(sel) { return doc().querySelector(sel); }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function waitFor(pred, ms) {
+    var start = Date.now();
+    return new Promise(function (resolve) {
+      (function tick() {
+        var v = null;
+        try { v = pred(); } catch (e) { v = null; }
+        if (v || Date.now() - start > (ms || 3000)) { resolve(v); return; }
+        setTimeout(tick, 20);
+      })();
+    });
+  }
+  function navigate(url) {
+    return new Promise(function (resolve) {
+      frame.onload = function () { frame.onload = null; resolve(); };
+      frame.src = url;
+    });
+  }
+  function step(name, value) { R.steps.push(name); R[name] = value; }
+  function groups() { return Array.prototype.slice.call(doc().querySelectorAll('[data-nav-group]')); }
+  function group(label) {
+    return groups().filter(function (g) { return g.querySelector('.nav-group__label').textContent.trim() === label; })[0] || null;
+  }
+  function state(g) {
+    var panel = g.querySelector('.nav-group__panel');
+    var inner = g.querySelector('.nav-group__inner');
+    var btn = g.querySelector('[data-nav-group-toggle]');
+    var sum = g.querySelector('[data-nav-group-sum]');
+    var cs = win().getComputedStyle(g.querySelector('.nav-group__chevron'));
+    return {
+      label: g.querySelector('.nav-group__label').textContent.trim(),
+      open: g.classList.contains('is-open'),
+      aria: btn.getAttribute('aria-expanded'),
+      controls: btn.getAttribute('aria-controls') === panel.id,
+      panelH: Math.round(panel.getBoundingClientRect().height),
+      innerH: inner.scrollHeight,
+      visible: win().getComputedStyle(inner).visibility,
+      chevron: cs.transform,
+      sum: win().getComputedStyle(sum).display === 'none' ? null : sum.textContent.trim(),
+      active: Array.prototype.map.call(inner.querySelectorAll('.app-sidebar__link.is-active'), function (a) {
+        return Array.prototype.filter.call(a.childNodes, function (n) { return n.nodeType === 3; }).map(function (n) { return n.textContent; }).join('').trim();
+      })
+    };
+  }
+  function layout() {
+    return { sidebarW: q('#appSidebar').getBoundingClientRect().width, mainLeft: Math.round(q('.app-main').getBoundingClientRect().left) };
+  }
+  // Bấm tiêu đề nhóm như người dùng. Chrome headless (virtual time) không chạy đồng hồ animation, nên: ghi nhận transition CSS được tạo
+  // (getAnimations - chứng minh có animation, trên thuộc tính nào), rồi finish() để nhảy tới trạng thái cuối và đo.
+  function toggle(label) {
+    var g = group(label);
+    var btn = g.querySelector('[data-nav-group-toggle]');
+    btn.click();
+    var immediate = { open: g.classList.contains('is-open'), aria: btn.getAttribute('aria-expanded') };
+    win().getComputedStyle(g.querySelector('.nav-group__panel')).gridTemplateRows; // flush style -> transition được tạo
+    win().getComputedStyle(g.querySelector('.nav-group__chevron')).transform;
+    var anims = g.getAnimations({ subtree: true });
+    var props = anims.map(function (a) { return a.transitionProperty || ''; }).filter(Boolean).sort();
+    anims.forEach(function (a) { a.finish(); });
+    return sleep(30).then(function () {
+      var s = state(g);
+      s.immediate = immediate;
+      s.animated = props;
+      return s;
+    });
+  }
+
+  navigate('/login').then(function () {
+    q('#username').value = P.user;
+    q('#password').value = 'Password@123';
+    return new Promise(function (resolve) {
+      frame.onload = function () { frame.onload = null; resolve(); };
+      q('form').submit();
+    });
+  })
+    .then(function () { return navigate('/dashboard'); })
+    .then(function () {
+      if (!P.lang) { return null; }
+      // Đổi ngôn ngữ như người dùng: mở menu 🌐, bấm ngôn ngữ -> form gửi, quay lại đúng trang
+      q('[data-lang-switch] > summary').click();
+      return new Promise(function (resolve) {
+        frame.onload = function () { frame.onload = null; resolve(); };
+        q('[data-lang-switch] button[value="' + P.lang + '"]').click();
+      }).then(function () { R.langAfterSwitch = { html: doc().documentElement.lang, url: win().location.pathname }; });
+    })
+    .then(function () {
+      step('dashboard', { groups: groups().map(state), layout: layout(),
+        tabbableInClosed: Array.prototype.filter.call(doc().querySelectorAll('.nav-group:not(.is-open) .app-sidebar__link'), function (a) { return win().getComputedStyle(a).visibility !== 'hidden'; }).length });
+      return toggle(P.a);
+    })
+    .then(function (s) { step('openCatalog', { s: s, layout: layout() }); return toggle(P.b); })
+    .then(function (s) { step('openPricing', { s: s, catalogStillOpen: state(group(P.a)).open }); return toggle(P.a); })
+    .then(function (s) { step('closeCatalog', { s: s, pricingStillOpen: state(group(P.b)).open, layout: layout() }); return toggle(P.pay); })
+    .then(function (s) {
+      var child = group(P.pay).querySelector('[data-payment-review-count], [data-issue-count]:not([hidden])');
+      step('openPayments', { s: s, childBadgeVisible: !!child && win().getComputedStyle(child).display !== 'none' });
+      return navigate('/dashboard');
+    })
+    .then(function () { step('reloadDashboard', { open: groups().filter(function (g) { return g.classList.contains('is-open'); }).length }); return navigate(P.sub); })
+    .then(function () {
+      var g = group(P.subGroup);
+      var panel = g.querySelector('.nav-group__panel');
+      step('subPage', { s: state(g), runningAnimations: panel.getAnimations ? panel.getAnimations().length : 0,
+        others: groups().filter(function (x) { return x !== g && x.classList.contains('is-open'); }).length, layout: layout() });
+    })
+    .catch(function (e) { R.error = String(e && e.stack || e); })
+    .then(function () { document.getElementById('__result').textContent = JSON.stringify(R); });
+})();
+</script>
+</body>
+</html>

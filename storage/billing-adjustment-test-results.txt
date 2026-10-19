@@ -1,0 +1,58 @@
+﻿PASS legacy sent notice protects confirmed charge
+PASS recalculation blocked
+PASS repository mutation blocked
+PASS charge deletion blocked
+PASS tier deletion blocked
+PASS old debt mutation blocked
+PASS parking delta uses approved applicable rates
+PASS technical staff cannot submit
+PASS management cannot initiate
+PASS stale preview fingerprint rejected
+PASS effective period must be explicitly full November
+PASS submission retry idempotent
+PASS duplicate pending request blocked
+PASS accounting cannot approve
+PASS unapproved request does not clear stale
+PASS submitted proposal blocks closing
+PASS stale issued charge blocks closing
+PASS management approval
+PASS approval retry idempotent
+PASS exactly one debit
+PASS approved complete reconciliation resolves specific difference
+PASS reconciliation permits normal closing checks
+PASS combined liability adds supplement without overwrite
+PASS original payment is counted only against original charge
+PASS supplement balance independent
+PASS original record, email, tiers, audit, payments unchanged
+PASS immutable billing_reconciliations
+PASS immutable supplementary_debits
+PASS changed input invalidates approved fingerprint
+PASS changed input restores closing blocker
+PASS rejection requires reason
+PASS rejected path
+PASS withdrawal path
+PASS stale submitted inputs cannot post
+PASS reject withdraw stale create no debit
+PASS zero delta reconciliation
+PASS zero delta creates no debit
+PASS same account cannot self-approve after role change
+PASS missing reading blocker preserved
+PASS draft reading blocker preserved
+PASS pending import blocker preserved
+PASS all workflow operations preserve original issued records
+PASS audit error propagated
+PASS approval transaction fully rolled back
+PASS concurrent approval succeeds idempotently: 
+PASS concurrent approval succeeds idempotently: 
+PASS concurrent approval creates exactly one debit
+PASS route roles correctly configured
+PASS adjustment POST has CSRF and authentication: /charges/{id}/adjustments
+PASS adjustment POST has CSRF and authentication: /billing-adjustments/{id}/approve
+PASS adjustment POST has CSRF and authentication: /billing-adjustments/{id}/reject
+PASS adjustment POST has CSRF and authentication: /billing-adjustments/{id}/withdraw
+PASS document UI displays original and combined liability
+PASS unrelated electricity difference cannot be reconciled
+PASS nonparking change invalidates approved reconciliation
+PASS unconfirmed charge blocker preserved
+PASS missing charge blocker preserved
+57/57 PASS; isolated database retained: energy_dss_adjustment_test_20261013_e

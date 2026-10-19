@@ -1,0 +1,25 @@
+{
+    "all_32_production_tables_unchanged": true,
+    "context_stage": "verified_confirm",
+    "context_text": "Dữ liệu đã được Ban quản lý xác nhận sau kiểm tra. Xem xét thông báo cư dân căn A103, tìm hiểu mức sử dụng điện tăng, hướng dẫn tiết kiệm và theo dõi kỳ tiếp theo. Không yêu cầu kiểm tra lại công tơ khi chưa có lý do mới.",
+    "matched_rules": [
+        {
+            "rule_id": 2,
+            "reason": "Vượt ngưỡng quy tắc #1 trong 1 kỳ liên tiếp",
+            "evidence": [
+                {
+                    "period": "12\/2026",
+                    "alert_rule_id": 1,
+                    "exceeded": true
+                }
+            ]
+        }
+    ],
+    "revision_storage_ready": false,
+    "legacy_recommendation_ids": [
+        4
+    ],
+    "legacy_labels": [
+        "Lịch sử khuyến nghị gốc"
+    ]
+}

@@ -1,0 +1,11 @@
+# Chặn toàn bộ truy cập web trực tiếp vào storage/ (logs, imports, exports)
+# và chặn thực thi PHP trong thư mục này (yêu cầu bảo mật mục XVI).
+Require all denied
+
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|pht)$">
+    Require all denied
+</FilesMatch>

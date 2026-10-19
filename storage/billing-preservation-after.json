@@ -1,0 +1,42 @@
+{
+    "charge21": {
+        "rows": 1,
+        "sha256": "87205a0e2a9c20673f77e5cf65babb7eec2eff21c19ef099fb8065cb31aaabd2"
+    },
+    "tiers21": {
+        "rows": 4,
+        "sha256": "a6e4e563816532bc8063b53c33cc265930e0283e73bf9d44c8411e1cd286b9a4"
+    },
+    "email1": {
+        "rows": 1,
+        "sha256": "a2f9f5909b23fdb4aeed27a45b94b2902412320997c8d747dd7c36e44a8e0c7e"
+    },
+    "charge21_audit": {
+        "rows": 2,
+        "sha256": "707ceffbf4d1a07f09e883bb2981f530e06852b72c2818eaa12a90b269551319"
+    },
+    "charges": {
+        "rows": 50,
+        "sha256": "18ab6494404f3ee468d1f670b50f2630b56b931bcb625d3d670ec3cbe9b5f8cb"
+    },
+    "readings": {
+        "rows": 100,
+        "sha256": "7741ca0c0b412fe2132aafe9cafc0dead3ef7ba6ca63d2acae4f4866f2c35111"
+    },
+    "prices": {
+        "rows": 15,
+        "sha256": "9f66222c9dee4b80294119c7366bcb71d95e49c4d7c5c433004c226e98b3e2f1"
+    },
+    "payments": {
+        "rows": 0,
+        "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "emails": {
+        "rows": 7,
+        "sha256": "2a6913c27e9c08f50f925307b893422de91b70309c67a73fa11acb713ecfd580"
+    },
+    "audit": {
+        "rows": 519,
+        "sha256": "d11cd4d6b43e5d1ef78f3d17ffc215f49f4406075b723a0c20237730e38e114c"
+    }
+}

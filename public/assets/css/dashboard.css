@@ -1,0 +1,139 @@
+﻿/* Scoped decision dashboard: loaded only by its view. */
+body:has(.decision-dashboard) { background:#f5f7fb; color:#1e293b; }
+body:has(.decision-dashboard) .app-content { width:100%; max-width:1440px; margin:0 auto; padding:24px; min-width:0; }
+body:has(.decision-dashboard) .app-main { min-width:0; }
+body:has(.decision-dashboard) .app-sidebar { background:#101d35; }
+body:has(.decision-dashboard) .app-sidebar__brand { font-size:15px; line-height:1.5; padding:20px; }
+body:has(.decision-dashboard) .app-sidebar__link { border-radius:8px; gap:10px; font-size:13px; line-height:1.5; padding:10px 12px; color:#cbd5e1; }
+body:has(.decision-dashboard) .app-sidebar__icon { display:inline-flex; align-items:center; justify-content:center; width:20px; flex:0 0 20px; font-size:16px; }
+body:has(.decision-dashboard) .app-sidebar__link:hover { background:#1c2e4b; color:white; }
+body:has(.decision-dashboard) .app-sidebar__link.is-active { background:#2563eb; color:white; box-shadow:inset 3px 0 #93c5fd; }
+body:has(.decision-dashboard) .nav-group__toggle { color:#94a3b8; font-size:11px; letter-spacing:.035em; }
+.decision-dashboard { --c-muted:#64748b; color:#1e293b; min-width:0; }
+.decision-dashboard .page-head { background:transparent; border:0; box-shadow:none; padding:0; margin:0 0 22px; display:flex; justify-content:space-between; align-items:center; gap:16px; }
+.decision-dashboard .page-title { font-size:26px; letter-spacing:-.6px; line-height:1.25; }
+.dashboard-subtitle { margin:7px 0 0; font-size:13px; color:#64748b; line-height:1.6; }
+.decision-dashboard .page-head__actions { display:flex; gap:8px; flex-wrap:wrap; }
+.decision-dashboard .btn { min-height:40px; padding:9px 14px; font-size:13px; border-radius:8px; }
+.decision-dashboard .btn--primary { background:#2563eb; border-color:#2563eb; }
+.decision-dashboard .panel,.decision-dashboard .kpi-card { border:1px solid #e2e8f0; border-radius:12px; background:#fff; box-shadow:0 2px 6px #101d3505; transform:none; min-width:0; }
+.decision-dashboard .panel { padding:20px; margin:0 0 22px; }
+.decision-dashboard .panel__head { margin-bottom:16px; min-height:0; }
+.decision-dashboard .panel__title { font-size:14px; font-weight:650; line-height:1.5; gap:6px; color:#1e293b; }
+.decision-dashboard .dash-filter-bar { display:flex; align-items:flex-end; gap:16px; }
+.decision-dashboard .dash-filter-bar__fields { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); flex:1; gap:16px; }
+.decision-dashboard .form-group { margin:0; min-width:0; }
+.decision-dashboard label { font-size:12px; color:#64748b; margin-bottom:7px; display:block; }
+.decision-dashboard select { width:100%; height:40px; border:1px solid #dbe2ec; border-radius:8px; background-color:#fff; font-size:13px; }
+.decision-dashboard select:focus { outline:2px solid #93c5fd; outline-offset:2px; }
+.decision-dashboard .kpi-grid-row { display:grid; gap:20px; margin:0 0 22px; }
+.decision-dashboard .kpi-row-4 { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.decision-dashboard .kpi-row-3 { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.decision-dashboard .kpi-card { padding:20px; display:flex; flex-direction:column; min-height:166px; }
+.decision-dashboard .kpi-card::before { height:3px; background:#2563eb; }
+.decision-dashboard .kpi-card--electric::before { background:#f97316; }
+.decision-dashboard .kpi-card--water::before { background:#0891b2; }
+.decision-dashboard .kpi-card--alert::before { background:#dc2626; }
+.decision-dashboard .kpi-card--cost::before { background:#16a34a; }
+.decision-dashboard .kpi-card__header { align-items:flex-start; gap:10px; }
+.decision-dashboard .kpi-card__label { font-size:12px; color:#64748b; line-height:1.5; font-weight:600; text-transform:none; }
+.decision-dashboard .kpi-card__icon { width:30px; height:30px; flex:0 0 30px; border-radius:8px; background:#eff6ff; color:#2563eb; border:0; }
+.decision-dashboard .kpi-card--electric .kpi-card__icon { color:#f97316; background:#fff7ed; }
+.decision-dashboard .kpi-card--water .kpi-card__icon { color:#0891b2; background:#ecfeff; }
+.decision-dashboard .kpi-card--alert .kpi-card__icon { color:#dc2626; background:#fef2f2; }
+.decision-dashboard .kpi-card--cost .kpi-card__icon { color:#16a34a; background:#f0fdf4; }
+.decision-dashboard .kpi-card__value { font-size:clamp(24px,2.2vw,32px); line-height:1.25; font-weight:700; letter-spacing:-.8px; margin:14px 0; font-variant-numeric:tabular-nums; overflow-wrap:anywhere; }
+.decision-dashboard .kpi-card__unit { font-size:13px; color:#64748b; letter-spacing:0; }
+.decision-dashboard .kpi-card__footer { margin-top:auto; }
+.decision-dashboard .kpi-card__hint { color:#64748b; font-size:11px; line-height:1.7; }
+.decision-dashboard .card-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; align-items:start; margin:0; }
+.decision-dashboard svg.chart { display:block; width:100%; height:auto; max-height:none; margin:0; }
+.decision-dashboard svg.chart line { stroke:#e2e8f0; }
+.decision-dashboard .dash-empty-state { display:flex; flex-direction:row; align-items:center; justify-content:flex-start; gap:12px; min-height:0; padding:12px 0; color:#64748b; }
+.decision-dashboard .dash-empty-state svg { flex-shrink:0; color:#16a34a; }
+.decision-dashboard .dash-empty-state p { margin:0; font-size:13px; }
+.decision-dashboard .table-wrap { overflow-x:auto; max-width:100%; }
+.decision-dashboard .card-grid .panel .table-wrap>.data-table { table-layout:auto; width:100%; min-width:520px !important; }
+.decision-dashboard .card-grid .panel .table-wrap>.data-table th,.decision-dashboard .card-grid .panel .table-wrap>.data-table td { width:auto !important; max-width:none; padding:11px 9px; overflow:visible; text-overflow:clip; }
+.decision-dashboard .data-table th { font-size:11px; color:#64748b; background:#f8fafc; white-space:nowrap; }
+.decision-dashboard .data-table td { font-size:12px; }
+.decision-dashboard .data-table .num { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.decision-dashboard .baseline-change { color:#b45309; font-weight:600; }
+.consumer-list,.advisory-list { list-style:none; padding:0; margin:0; }
+.consumer-row { padding:12px 0; border-bottom:1px solid #f1f5f9; }
+.consumer-row:last-child { border-bottom:0; }
+.consumer-row__head,.target-item__head,.target-item__values { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13px; line-height:1.5; }
+.consumer-row__head>span { display:flex; align-items:center; gap:10px; }
+.consumer-row__head small { color:#64748b; font-weight:400; }
+.consumer-rank { display:inline-grid; place-items:center; width:24px; height:24px; background:#f1f5f9; border-radius:6px; font-size:11px; color:#64748b; }
+.is-highest .consumer-rank { background:#eff6ff; color:#2563eb; font-weight:700; }
+.dashboard-meter { height:7px; background:#f1f5f9; border-radius:6px; overflow:hidden; margin-top:10px; }
+.dashboard-meter>span { display:block; height:100%; background:#2563eb; border-radius:6px; }
+.consumer-list--electric .dashboard-meter>span { background:#f97316; }
+.consumer-list--water .dashboard-meter>span { background:#0891b2; }
+.consumer-row:not(.is-highest) .dashboard-meter>span { opacity:.6; }
+.target-item { padding:14px 0; border-bottom:1px solid #e2e8f0; }
+.target-item:first-child { padding-top:0; }
+.target-item:last-child { border-bottom:0; padding-bottom:0; }
+.target-item__head { align-items:flex-start; }
+.target-item__head .badge { flex-shrink:0; }
+.target-item__values { margin-top:12px; font-variant-numeric:tabular-nums; }
+.target-item--dat .dashboard-meter>span { background:#16a34a; }
+.target-item--khong_dat .dashboard-meter>span { background:#dc2626; }
+.target-item--khong_dat .target-item__values strong,.target-item--khong_dat .target-item__variance { color:#b45309; }
+.target-item__variance { font-size:11px; margin:8px 0 0; color:#64748b; }
+.advisory-list li { border:1px solid #e2e8f0; border-left:3px solid #2563eb; border-radius:8px; background:#fafcff; padding:14px; margin-bottom:12px; font-size:12px; line-height:1.7; overflow-wrap:anywhere; }
+.advisory-list li:last-child { margin-bottom:0; }
+.advisory-list a { font-weight:650; color:#2563eb; }
+.advisory-apartment { margin:0 8px; color:#64748b; }
+.advisory-date { display:block; font-size:10px; color:#64748b; margin-top:4px; }
+.advisory-list p { margin:8px 0 0; white-space:pre-wrap; color:#334155; }
+@media(max-width:1100px) {
+ .decision-dashboard .kpi-row-4,.decision-dashboard .kpi-row-3 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .decision-dashboard .dash-filter-bar__fields { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .decision-dashboard .card-grid { grid-template-columns:minmax(0,1fr); }
+}
+@media(max-width:600px) {
+ body:has(.decision-dashboard) .app-content { padding:16px; }
+ .decision-dashboard .page-head { flex-direction:column; align-items:stretch; }
+ .decision-dashboard .page-title { font-size:23px; }
+ .decision-dashboard .page-head__actions { width:auto; }
+ .decision-dashboard .kpi-row-4,.decision-dashboard .kpi-row-3,.decision-dashboard .dash-filter-bar__fields { grid-template-columns:minmax(0,1fr); }
+ .decision-dashboard .dash-filter-bar { flex-direction:column; align-items:stretch; }
+ .decision-dashboard .kpi-card { min-height:145px; }
+ .decision-dashboard .panel { padding:16px; }
+ .decision-dashboard .target-item__head { flex-wrap:wrap; }
+}
+@media print { .decision-dashboard .panel,.decision-dashboard .kpi-card { break-inside:avoid; box-shadow:none; } }
+/* The existing dashboard menu link has no active class. Scope its emphasis to this page. */
+body:has(.decision-dashboard) .app-sidebar__link[href$="/dashboard"] { background:#2563eb; color:#fff; box-shadow:inset 3px 0 #93c5fd; }
+.decision-dashboard .data-table td.baseline-change { color:#b45309; }
+@media(max-width:600px) {
+ .decision-dashboard .page-head>div:first-child { flex:0 1 auto; }
+ .decision-dashboard .dash-filter-bar__fields { width:100%; flex:0 1 auto; }
+ .decision-dashboard .page-head__actions .btn { min-width:0; white-space:normal; }
+}
+
+/* ===== Sắp xếp lại: Việc cần làm -> Số chính -> Xu hướng -> Cần chú ý -> Phân tích thêm ===== */
+.decision-dashboard .dash-todo { margin:0 0 22px; padding:18px 20px; background:#fff; border:1px solid #e2e8f0; border-left:4px solid #2563eb; border-radius:12px; }
+.decision-dashboard .dash-todo__head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+.decision-dashboard .dash-todo__title { margin:0; font-size:18px; font-weight:700; color:#0f172a; }
+.decision-dashboard .dash-todo__help { font-size:14px; font-weight:600; }
+.decision-dashboard .dash-todo__list { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
+.decision-dashboard .dash-todo__item { display:flex; align-items:center; justify-content:space-between; gap:12px; min-height:56px; padding:12px 16px; border-radius:10px; border:1px solid #e2e8f0; background:#f8fafc; color:#0f172a; font-size:15.5px; font-weight:600; text-decoration:none; }
+.decision-dashboard .dash-todo__item:hover { text-decoration:none; background:#eff6ff; border-color:#93c5fd; }
+.decision-dashboard .dash-todo__item--warning { background:#fffbeb; border-color:#fde68a; }
+.decision-dashboard .dash-todo__item--danger { background:#fef2f2; border-color:#fecaca; }
+.decision-dashboard .dash-todo__go { font-size:20px; color:#2563eb; flex:0 0 auto; }
+.decision-dashboard .dash-todo__empty { margin:0; padding:12px 16px; border-radius:10px; background:#ecfdf3; border:1px solid #abefc6; color:#067647; font-size:15.5px; font-weight:600; }
+.decision-dashboard .dash-section-title { margin:30px 0 14px; padding-top:18px; border-top:1px solid #e2e8f0; font-size:18px; font-weight:700; color:#0f172a; }
+.decision-dashboard .kpi-card__value { font-size:34px; }
+.decision-dashboard .kpi-card__label { font-size:13.5px; }
+.decision-dashboard .kpi-card__hint { font-size:13px; }
+.decision-dashboard label { font-size:13.5px; }
+.decision-dashboard select { height:44px; font-size:15px; }
+.decision-dashboard .btn { min-height:44px; font-size:14.5px; }
+.decision-dashboard .panel__title { font-size:16px; }
+.dashboard-subtitle { font-size:14.5px; color:#475569; font-weight:500; }
+.decision-dashboard .data-table th, .decision-dashboard .data-table td { padding:10px 6px; font-size:13.5px; }
+.decision-dashboard .data-table th:first-child, .decision-dashboard .data-table td:first-child { padding-left:10px; }

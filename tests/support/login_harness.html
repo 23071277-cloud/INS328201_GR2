@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="UTF-8"><title>login harness</title><style>body{margin:0}</style></head>
+<body>
+<!-- Test trình duyệt trang đăng nhập (chỉ phục vụ bởi tests/support/review_router.php, DB tạm). ?mode=full | ?mode=shot (dừng ở trạng thái lỗi để chụp) -->
+<iframe id="app" style="width:100vw;height:100vh;border:0"></iframe>
+<pre id="__result" style="position:absolute;left:-9999px"></pre>
+<script>
+(function () {
+  var mode = new URLSearchParams(location.search).get('mode') || 'full';
+  var frame = document.getElementById('app');
+  var R = { steps: [] };
+  function doc() { return frame.contentDocument; }
+  function win() { return frame.contentWindow; }
+  function q(s) { return doc().querySelector(s); }
+  function waitFor(pred, ms) {
+    var start = Date.now();
+    return new Promise(function (ok, ko) {
+      (function tick() { var v = null; try { v = pred(); } catch (e) { v = null; }
+        if (v) { ok(v); return; } if (Date.now() - start > (ms || 15000)) { ko(new Error('timeout')); return; } setTimeout(tick, 50); })();
+    });
+  }
+  function load(url) { return new Promise(function (ok) { frame.onload = function () { frame.onload = null; ok(); }; frame.src = url; }); }
+  load('/login').then(function () {
+    var t = q('[data-toggle-password]'), p = q('#password');
+    R.toggle = { visible: !t.hidden, before: p.type };
+    t.click(); R.toggle.shown = [p.type, t.getAttribute('aria-pressed'), t.getAttribute('aria-label')];
+    t.click(); R.toggle.hiddenAgain = [p.type, t.getAttribute('aria-pressed')];
+    R.layout = { cardW: Math.round(q('.login-card').getBoundingClientRect().width), bg: getComputedStyle(q('.login-scene__image')).backgroundImage.indexOf('login-bg') !== -1,
+      blur: (getComputedStyle(q('.login-card')).backdropFilter || getComputedStyle(q('.login-card')).webkitBackdropFilter || '').indexOf('blur') !== -1 };
+    // trống -> báo ngay, không gửi
+    q('#username').value = ''; p.value = '';
+    q('[data-login-form]').requestSubmit();
+    R.empty = [!q('[data-login-alert]').hidden, q('[data-login-alert-text]').textContent];
+    // sai mật khẩu -> lỗi trong thẻ, không tải lại trang
+    win().__marker = 1;
+    q('#username').value = 'bql01'; p.value = 'SaiMatKhau!';
+    q('[data-login-form]').requestSubmit();
+    R.loadingDuring = q('[data-login-submit]').classList.contains('is-loading') && q('[data-login-submit]').disabled;
+    return waitFor(function () { return /không đúng/.test(q('[data-login-alert-text]').textContent) && !q('[data-login-submit]').disabled; });
+  }).then(function () {
+    R.fail = { noReload: win().__marker === 1, text: q('[data-login-alert-text]').textContent, visible: !q('[data-login-alert]').hidden,
+      passwordCleared: q('#password').value === '', username: q('#username').value, button: q('[data-login-submit-text]').textContent,
+      technical: /exception|sqlstate|stack trace|warning:|fatal|pdo/i.test(q('.login-card').textContent), path: win().location.pathname };
+    if (mode === 'shot') { return null; }
+    win().__marker = 1;
+    q('#password').value = 'Password@123';
+    q('[data-login-form]').requestSubmit();
+    return waitFor(function () { try { return /\/dashboard$/.test(win().location.pathname) && doc().readyState === 'complete'; } catch (e) { return false; } }).then(function () {
+      R.success = { path: win().location.pathname, reloadedToApp: win().__marker === undefined, hasSidebar: !!q('#appSidebar') };
+    });
+  }).catch(function (e) { R.error = String(e && e.message || e); })
+    .then(function () { document.getElementById('__result').textContent = JSON.stringify(R); });
+})();
+</script>
+</body>
+</html>

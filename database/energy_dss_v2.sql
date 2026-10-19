@@ -441,7 +441,6 @@ CREATE TABLE alert_rules (
   compare_base    ENUM('ky_truoc','baseline','gia_tri_tuyet_doi') NOT NULL,
   operator        ENUM('gt','gte') NOT NULL DEFAULT 'gt' COMMENT 'VD tăng > X% so baseline',
   threshold_value DECIMAL(12,4) NOT NULL COMMENT '[TL] FR-08 ASSUMPTION - giá trị cụ thể CHƯA ĐƯỢC ĐẶC TẢ, xem J-32',
-  min_absolute_diff DECIMAL(12,4) NULL DEFAULT NULL COMMENT 'FR-08: Ngưỡng hiệu số tuyệt đối tối thiểu. NULL giữ quy tắc một điều kiện; khi có giá trị, cả threshold_value và min_absolute_diff phải được vượt.',
   scope_type      ENUM('toan_toa','zone','usage_type') NOT NULL DEFAULT 'toan_toa',
   scope_value     VARCHAR(50) NULL,
   priority_level  ENUM('cao','trung_binh','thap') NOT NULL DEFAULT 'trung_binh' COMMENT '[DX] BR-43',
@@ -643,6 +642,42 @@ CREATE TABLE email_notifications (
   INDEX idx_email_apartment (apartment_id)
 ) ENGINE=InnoDB COMMENT='FN-10.03 (Secondary) hộp thư đi / lịch sử gửi email - STEP 25, patch 004';
 
+-- ============================================================================
+-- Gửi phiếu phí qua Zalo ZNS - hộp thư đi Zalo (migration 20261018)
+-- ============================================================================
+CREATE TABLE zalo_notifications (
+  id                  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  notification_type   VARCHAR(30)  NOT NULL DEFAULT 'bill_notice',
+  resident_id         INT UNSIGNED NULL COMMENT 'Người nhận (chủ hộ / khách thuê) lúc gửi',
+  apartment_id        INT UNSIGNED NOT NULL,
+  billing_period_id   INT UNSIGNED NULL,
+  apartment_charge_id BIGINT UNSIGNED NULL COMMENT 'Bản tính được thông báo',
+  recipient_phone     VARCHAR(15)  NOT NULL COMMENT 'Số điện thoại đã chuẩn hoá 84xxxxxxxxx - dữ liệu cá nhân (BR-36)',
+  recipient_name      VARCHAR(150) NULL,
+  template_id         VARCHAR(40)  NOT NULL COMMENT 'ID mẫu ZNS đã được Zalo duyệt (ZALO_TEMPLATE_BILL)',
+  template_data       TEXT         NOT NULL COMMENT 'JSON tham số mẫu đã gửi (snapshot)',
+  body_text           TEXT         NOT NULL COMMENT 'Bản đọc được của nội dung để xem lại',
+  content_hash        CHAR(64)     NOT NULL COMMENT 'sha256 nội dung - chống gửi trùng',
+  tracking_id         VARCHAR(48)  NOT NULL COMMENT 'Mã đối soát gửi kèm Zalo',
+  zalo_msg_id         VARCHAR(80)  NULL COMMENT 'msg_id Zalo trả về khi nhận tin',
+  transport           VARCHAR(20)  NOT NULL COMMENT 'zns / log / array (ZALO_DRIVER lúc gửi)',
+  status              ENUM('pending','sent','failed') NOT NULL DEFAULT 'pending',
+  attempt_count       TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  last_error          VARCHAR(500) NULL COMMENT 'Lỗi đã làm sạch - không chứa token',
+  sent_at             DATETIME NULL,
+  created_by          INT UNSIGNED NULL,
+  created_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_zalo_resident FOREIGN KEY (resident_id) REFERENCES residents(id) ON DELETE SET NULL,
+  CONSTRAINT fk_zalo_apartment FOREIGN KEY (apartment_id) REFERENCES apartments(id),
+  CONSTRAINT fk_zalo_period FOREIGN KEY (billing_period_id) REFERENCES billing_periods(id),
+  CONSTRAINT fk_zalo_charge FOREIGN KEY (apartment_charge_id) REFERENCES apartment_charges(id) ON DELETE SET NULL,
+  CONSTRAINT fk_zalo_creator FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
+  UNIQUE KEY uq_zalo_dedupe (apartment_charge_id, recipient_phone, notification_type, content_hash),
+  INDEX idx_zalo_status (status, created_at),
+  INDEX idx_zalo_apartment (apartment_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Hộp thư đi Zalo ZNS - phiếu thông báo phí';
+
 -- Thanh toán (Payment module): giao dịch ngân hàng nhận qua callback (Mock Bank - chỉ local/demo) + kết quả đối soát.
 -- Trạng thái thanh toán của bản tính (UNPAID / PAID / PAYMENT_REVIEW) KHÔNG lưu - tính từ các giao dịch (3NF; không ghi vào
 -- apartment_charges, kể cả bản tính của kỳ đã khoá). Không hỗ trợ thanh toán một phần: chỉ khớp đúng số tiền.
@@ -690,6 +725,11 @@ INSERT INTO `apartments` (`id`, `building_id`, `zone_id`, `code`, `area`, `occup
 INSERT INTO `apartments` (`id`, `building_id`, `zone_id`, `code`, `area`, `occupancy_status`, `status`, `created_at`, `updated_at`) VALUES (3,1,3,'CC-2305',70.00,'co_o','hoat_dong','2026-10-04 11:40:19','2026-10-04 11:40:19');
 INSERT INTO `apartments` (`id`, `building_id`, `zone_id`, `code`, `area`, `occupancy_status`, `status`, `created_at`, `updated_at`) VALUES (4,1,3,'CC-2306',70.00,'khong_phat_sinh','hoat_dong','2026-10-04 11:40:19','2026-10-04 11:40:19');
 INSERT INTO `baselines` (`id`, `scope_type`, `scope_id`, `utility_type`, `method`, `n_periods`, `manual_value`, `computed_value`, `effective_date`, `status`, `created_by`, `created_at`) VALUES (1,'apartment',1,'dien','ky_truoc',NULL,NULL,343.00,'2024-07-01','hieu_luc',1,'2026-10-04 11:40:19');
+INSERT INTO `baselines` (`id`, `scope_type`, `scope_id`, `utility_type`, `method`, `n_periods`, `manual_value`, `computed_value`, `effective_date`, `status`, `created_by`, `created_at`) VALUES (2,'apartment',1,'nuoc','ky_truoc',NULL,NULL,16.00,'2024-07-01','hieu_luc',1,'2026-10-04 11:40:19');
+INSERT INTO `baselines` (`id`, `scope_type`, `scope_id`, `utility_type`, `method`, `n_periods`, `manual_value`, `computed_value`, `effective_date`, `status`, `created_by`, `created_at`) VALUES (3,'apartment',2,'dien','ky_truoc',NULL,NULL,150.00,'2024-07-01','hieu_luc',1,'2026-10-04 11:40:19');
+INSERT INTO `baselines` (`id`, `scope_type`, `scope_id`, `utility_type`, `method`, `n_periods`, `manual_value`, `computed_value`, `effective_date`, `status`, `created_by`, `created_at`) VALUES (4,'apartment',2,'nuoc','ky_truoc',NULL,NULL,30.00,'2024-07-01','hieu_luc',1,'2026-10-04 11:40:19');
+INSERT INTO `baselines` (`id`, `scope_type`, `scope_id`, `utility_type`, `method`, `n_periods`, `manual_value`, `computed_value`, `effective_date`, `status`, `created_by`, `created_at`) VALUES (5,'apartment',3,'dien','ky_truoc',NULL,NULL,150.00,'2024-07-01','hieu_luc',1,'2026-10-04 11:40:19');
+INSERT INTO `baselines` (`id`, `scope_type`, `scope_id`, `utility_type`, `method`, `n_periods`, `manual_value`, `computed_value`, `effective_date`, `status`, `created_by`, `created_at`) VALUES (6,'apartment',3,'nuoc','ky_truoc',NULL,NULL,12.00,'2024-07-01','hieu_luc',1,'2026-10-04 11:40:19');
 INSERT INTO `billing_periods` (`id`, `period_code`, `start_date`, `end_date`, `reading_due_date`, `status`, `created_by`, `locked_by`, `locked_at`, `reopened_by`, `reopened_at`, `reopen_reason`, `created_at`, `updated_at`) VALUES (1,'06/2024','2024-06-01','2024-06-30',NULL,'da_khoa',1,1,'2024-07-05 09:00:00',NULL,NULL,NULL,'2026-10-04 11:40:19','2026-10-04 11:40:19');
 INSERT INTO `billing_periods` (`id`, `period_code`, `start_date`, `end_date`, `reading_due_date`, `status`, `created_by`, `locked_by`, `locked_at`, `reopened_by`, `reopened_at`, `reopen_reason`, `created_at`, `updated_at`) VALUES (2,'07/2024','2024-07-01','2024-07-31',NULL,'mo',1,NULL,NULL,NULL,NULL,NULL,'2026-10-04 11:40:19','2026-10-04 11:40:19');
 INSERT INTO `buildings` (`id`, `code`, `name`, `status`, `created_by`, `created_at`, `updated_at`) VALUES (1,'CHUNGCU-A','Chung cư A','hoat_dong',1,'2026-10-04 11:40:19','2026-10-04 11:40:19');
@@ -716,6 +756,16 @@ INSERT INTO `meter_readings` (`id`, `meter_id`, `billing_period_id`, `previous_r
 INSERT INTO `meter_readings` (`id`, `meter_id`, `billing_period_id`, `previous_reading`, `current_reading`, `consumption`, `status`, `source`, `import_batch_id`, `is_meter_changed`, `old_meter_id`, `note`, `entered_by`, `confirmed_by`, `confirmed_at`, `created_at`, `updated_at`) VALUES (6,6,1,50.00,62.00,12.00,'da_xac_nhan','thu_cong',NULL,0,NULL,NULL,2,1,'2024-07-02 10:10:00','2026-10-04 11:40:19','2026-10-04 11:40:19');
 INSERT INTO `meter_readings` (`id`, `meter_id`, `billing_period_id`, `previous_reading`, `current_reading`, `consumption`, `status`, `source`, `import_batch_id`, `is_meter_changed`, `old_meter_id`, `note`, `entered_by`, `confirmed_by`, `confirmed_at`, `created_at`, `updated_at`) VALUES (7,7,1,0.00,0.00,0.00,'da_xac_nhan','thu_cong',NULL,0,NULL,NULL,2,1,'2024-07-02 10:15:00','2026-10-04 11:40:19','2026-10-04 11:40:19');
 INSERT INTO `meter_readings` (`id`, `meter_id`, `billing_period_id`, `previous_reading`, `current_reading`, `consumption`, `status`, `source`, `import_batch_id`, `is_meter_changed`, `old_meter_id`, `note`, `entered_by`, `confirmed_by`, `confirmed_at`, `created_at`, `updated_at`) VALUES (8,8,1,0.00,0.00,0.00,'da_xac_nhan','thu_cong',NULL,0,NULL,NULL,2,1,'2024-07-02 10:15:00','2026-10-04 11:40:19','2026-10-04 11:40:19');
+-- Kỳ 07/2024: BT1-DIEN +31% vs baseline (450/343), BT1-NUOC +31%, CC2305-DIEN +33%, CC2305-NUOC +42% → sẽ sinh cảnh báo khi evaluate
+-- CC2306 có CL > 0 dù khong_phat_sinh → J-16 demo
+INSERT INTO `meter_readings` (`id`, `meter_id`, `billing_period_id`, `previous_reading`, `current_reading`, `consumption`, `status`, `source`, `import_batch_id`, `is_meter_changed`, `old_meter_id`, `note`, `entered_by`, `confirmed_by`, `confirmed_at`, `created_at`, `updated_at`) VALUES (9,1,2,1343.00,1793.00,450.00,'da_xac_nhan','thu_cong',NULL,0,NULL,NULL,2,1,'2024-08-02 10:00:00','2026-10-04 11:40:19','2026-10-04 11:40:19');
+INSERT INTO `meter_readings` (`id`, `meter_id`, `billing_period_id`, `previous_reading`, `current_reading`, `consumption`, `status`, `source`, `import_batch_id`, `is_meter_changed`, `old_meter_id`, `note`, `entered_by`, `confirmed_by`, `confirmed_at`, `created_at`, `updated_at`) VALUES (10,2,2,216.00,237.00,21.00,'da_xac_nhan','thu_cong',NULL,0,NULL,NULL,2,1,'2024-08-02 10:00:00','2026-10-04 11:40:19','2026-10-04 11:40:19');
+INSERT INTO `meter_readings` (`id`, `meter_id`, `billing_period_id`, `previous_reading`, `current_reading`, `consumption`, `status`, `source`, `import_batch_id`, `is_meter_changed`, `old_meter_id`, `note`, `entered_by`, `confirmed_by`, `confirmed_at`, `created_at`, `updated_at`) VALUES (11,3,2,650.00,830.00,180.00,'da_xac_nhan','thu_cong',NULL,0,NULL,NULL,2,1,'2024-08-02 10:05:00','2026-10-04 11:40:19','2026-10-04 11:40:19');
+INSERT INTO `meter_readings` (`id`, `meter_id`, `billing_period_id`, `previous_reading`, `current_reading`, `consumption`, `status`, `source`, `import_batch_id`, `is_meter_changed`, `old_meter_id`, `note`, `entered_by`, `confirmed_by`, `confirmed_at`, `created_at`, `updated_at`) VALUES (12,4,2,130.00,157.00,27.00,'da_xac_nhan','thu_cong',NULL,0,NULL,NULL,2,1,'2024-08-02 10:05:00','2026-10-04 11:40:19','2026-10-04 11:40:19');
+INSERT INTO `meter_readings` (`id`, `meter_id`, `billing_period_id`, `previous_reading`, `current_reading`, `consumption`, `status`, `source`, `import_batch_id`, `is_meter_changed`, `old_meter_id`, `note`, `entered_by`, `confirmed_by`, `confirmed_at`, `created_at`, `updated_at`) VALUES (13,5,2,450.00,650.00,200.00,'da_xac_nhan','thu_cong',NULL,0,NULL,NULL,2,1,'2024-08-02 10:10:00','2026-10-04 11:40:19','2026-10-04 11:40:19');
+INSERT INTO `meter_readings` (`id`, `meter_id`, `billing_period_id`, `previous_reading`, `current_reading`, `consumption`, `status`, `source`, `import_batch_id`, `is_meter_changed`, `old_meter_id`, `note`, `entered_by`, `confirmed_by`, `confirmed_at`, `created_at`, `updated_at`) VALUES (14,6,2,62.00,79.00,17.00,'da_xac_nhan','thu_cong',NULL,0,NULL,NULL,2,1,'2024-08-02 10:10:00','2026-10-04 11:40:19','2026-10-04 11:40:19');
+INSERT INTO `meter_readings` (`id`, `meter_id`, `billing_period_id`, `previous_reading`, `current_reading`, `consumption`, `status`, `source`, `import_batch_id`, `is_meter_changed`, `old_meter_id`, `note`, `entered_by`, `confirmed_by`, `confirmed_at`, `created_at`, `updated_at`) VALUES (15,7,2,0.00,5.00,5.00,'da_xac_nhan','thu_cong',NULL,0,NULL,NULL,2,1,'2024-08-02 10:15:00','2026-10-04 11:40:19','2026-10-04 11:40:19');
+INSERT INTO `meter_readings` (`id`, `meter_id`, `billing_period_id`, `previous_reading`, `current_reading`, `consumption`, `status`, `source`, `import_batch_id`, `is_meter_changed`, `old_meter_id`, `note`, `entered_by`, `confirmed_by`, `confirmed_at`, `created_at`, `updated_at`) VALUES (16,8,2,0.00,3.00,3.00,'da_xac_nhan','thu_cong',NULL,0,NULL,NULL,2,1,'2024-08-02 10:15:00','2026-10-04 11:40:19','2026-10-04 11:40:19');
 INSERT INTO `meters` (`id`, `apartment_id`, `meter_code`, `utility_type`, `usage_type`, `display_label`, `initial_reading`, `status`, `created_at`, `updated_at`) VALUES (1,1,'BT1-DIEN','dien','sinh_hoat',NULL,1000.00,'hoat_dong','2026-10-04 11:40:19','2026-10-04 11:40:19');
 INSERT INTO `meters` (`id`, `apartment_id`, `meter_code`, `utility_type`, `usage_type`, `display_label`, `initial_reading`, `status`, `created_at`, `updated_at`) VALUES (2,1,'BT1-NUOC','nuoc','sinh_hoat',NULL,200.00,'hoat_dong','2026-10-04 11:40:19','2026-10-04 11:40:19');
 INSERT INTO `meters` (`id`, `apartment_id`, `meter_code`, `utility_type`, `usage_type`, `display_label`, `initial_reading`, `status`, `created_at`, `updated_at`) VALUES (3,2,'S01-DIEN','dien','kinh_doanh',NULL,500.00,'hoat_dong','2026-10-04 11:40:19','2026-10-04 11:40:19');
@@ -772,5 +822,5 @@ INSERT INTO `zones` (`id`, `building_id`, `code`, `name`, `zone_type`, `status`,
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ============================================================================
--- TABLE COUNT: 27
+-- TABLE COUNT: 28
 -- ============================================================================
