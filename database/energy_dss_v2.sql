@@ -1,8 +1,8 @@
 -- ============================================================================
 -- Energy & Utility DSS - Topic 09 (Nhóm 2)
--- File: database/energy_dss_v2.sql   [FILE CSDL DUY NHẤT CỦA BẢN NỘP CUỐI]
+-- File: database/energy_dss_v2.sql   
 --
--- Schema 3NF hiện hành (27 bảng) + DỮ LIỆU DEMO TỔNG HỢP (không phải dữ liệu thật):
+-- Schema 3NF hiện hành (27 bảng) + DỮ LIỆU DEMO TỔNG HỢP:
 --   3 tài khoản demo (bql01 / kythuat01 / ketoan01, mật khẩu Password@123 - CHỈ DÙNG DEMO),
 --   1 tòa nhà, 3 khu, 4 căn hộ, 4 cư dân (tên giả), 8 công tơ, 2 xe,
 --   biểu giá điện / nước (4 phiên bản, 10 bậc) + 7 loại phí cố định,
